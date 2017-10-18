@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ContestEACA.Models.Post>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Work)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rating)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.File)
+                </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Work)
+            </td>
+            <td>
+                @*@{ 
+                    int rating = 0;
+                    List<Like> likes = ViewBag.Likes;
+                    foreach (var u in likes)
+                    {
+                        if (u.PostId == item.ID)
+                        {
+                            rating++;
+                        }
+                    }
+                }*@
+
+                @{ 
+
+                }
+                @Html.DisplayFor(modelItem => item.Rating)
+                <a asp-action="LikeUp" asp-controller="Posts" asp-route-id="@item.ID">Like</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+
+            <td>
+                <a href=@Url.Content(item.File)>@Url.Content(item.File)</a>
+            </td>
+
+            @if (User.Identity.Name == item.Author)
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            }
+        </tr>
+}
+    </tbody>
+</table>

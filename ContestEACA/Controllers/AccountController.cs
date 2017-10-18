@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using ContestEACA.Models;
 using ContestEACA.Models.AccountViewModels;
 using ContestEACA.Services;
+using ContestEACA.Extensions;
 
 namespace ContestEACA.Controllers
 {
@@ -48,6 +49,7 @@ namespace ContestEACA.Controllers
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ViewData["ReturnUrl"] = returnUrl;
+
             return View();
         }
 
@@ -220,15 +222,21 @@ namespace ContestEACA.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
                 var result = await _userManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme); 
+
+                    var emailService = new EmailService();
+
+                    emailService.SendEmailAsync(model.Email, "Confirm your account", $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
@@ -312,6 +320,9 @@ namespace ContestEACA.Controllers
                 }
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
+
+                await _userManager.AddToRoleAsync(user, "user");
+
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user, info);

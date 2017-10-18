@@ -26,12 +26,23 @@ namespace ContestEACA
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            services.AddDbContext<ApplicationPostDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = "87881739727-i3p27sbrbdva1dgrglelskk92u3scs7b.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "TO7T2VvDculmMh71NvSOXn-Y";
+            });
+
+            
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
@@ -56,6 +67,7 @@ namespace ContestEACA
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
 
             app.UseMvc(routes =>
             {
