@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ContestEACA.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         RoleManager<IdentityRole> _roleManager;

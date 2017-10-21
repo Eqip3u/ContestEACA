@@ -11,9 +11,10 @@ using System;
 namespace ContestEACA.Migrations
 {
     [DbContext(typeof(ApplicationPostDbContext))]
-    partial class ApplicationPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171021104642_PostAddLinkWork")]
+    partial class PostAddLinkWork
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,10 +69,6 @@ namespace ContestEACA.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Author");
-
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime>("DateModified");
 
                     b.Property<string>("File");
 

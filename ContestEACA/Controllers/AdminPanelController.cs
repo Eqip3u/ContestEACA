@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using ContestEACA.Data;
 using ContestEACA.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ContestEACA.Controllers
 {
@@ -15,16 +18,19 @@ namespace ContestEACA.Controllers
     public class AdminPanelController : Controller
     {
         private readonly ApplicationPostDbContext _context;
+        private IHostingEnvironment _appEnvironment;
 
-        public AdminPanelController(ApplicationPostDbContext context)
+        public AdminPanelController(ApplicationPostDbContext context, IHostingEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
+
         }
 
         // GET: AdminPanel
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            return View(await _context.Posts.Include(x => x.Likes).Include(x => x.Nomination).ToListAsync());
         }
 
         // GET: AdminPanel/Details/5
@@ -56,16 +62,46 @@ namespace ContestEACA.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Work,Rating,Author")] Post applicationPost)
+        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId")] Post post, IFormFile uploadedFile)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(applicationPost);
+                post.Author = User.Identity.Name;
+
+                post.DateCreated = DateTime.Now;
+                post.DateModified = DateTime.Now;
+
+                await AddFileToUser(post, uploadedFile);
+
+                _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(applicationPost);
+            return View(post);
         }
+
+        //Create File to IO
+        private async Task AddFileToUser(Post post, IFormFile uploadedFile)
+        {
+
+            if (uploadedFile != null)
+            {
+                Directory.CreateDirectory(_appEnvironment.WebRootPath + "/Files/" + User.Identity.Name);
+                string path = "/Files/" + User.Identity.Name + "/" + uploadedFile.FileName;
+
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+
+                _context.Files.Add(file);
+                _context.SaveChanges();
+
+                post.File = file.Path;
+            }
+        }
+
 
         // GET: AdminPanel/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -84,13 +120,11 @@ namespace ContestEACA.Controllers
         }
 
         // POST: AdminPanel/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Work,Rating,Author")] Post applicationPost)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Work,Rating,Author")] Post post)
         {
-            if (id != applicationPost.ID)
+            if (id != post.ID)
             {
                 return NotFound();
             }
@@ -99,12 +133,15 @@ namespace ContestEACA.Controllers
             {
                 try
                 {
-                    _context.Update(applicationPost);
+                    post.Author = User.Identity.Name;
+                    post.DateModified = DateTime.Now;
+
+                    _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationPostExists(applicationPost.ID))
+                    if (!ApplicationPostExists(post.ID))
                     {
                         return NotFound();
                     }
@@ -115,7 +152,7 @@ namespace ContestEACA.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(applicationPost);
+            return View(post);
         }
 
         // GET: AdminPanel/Delete/5

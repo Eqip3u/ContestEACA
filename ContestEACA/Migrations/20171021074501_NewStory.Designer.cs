@@ -11,9 +11,10 @@ using System;
 namespace ContestEACA.Migrations
 {
     [DbContext(typeof(ApplicationPostDbContext))]
-    partial class ApplicationPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171021074501_NewStory")]
+    partial class NewStory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +58,12 @@ namespace ContestEACA.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("PostId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId")
+                        .IsUnique();
 
                     b.ToTable("Nominations");
                 });
@@ -69,25 +75,15 @@ namespace ContestEACA.Migrations
 
                     b.Property<string>("Author");
 
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime>("DateModified");
-
                     b.Property<string>("File");
-
-                    b.Property<string>("LinkWork");
-
-                    b.Property<int>("NominationId");
 
                     b.Property<int>("Rating");
 
-                    b.Property<string>("TextWork");
-
                     b.Property<string>("Title");
 
-                    b.HasKey("ID");
+                    b.Property<string>("Work");
 
-                    b.HasIndex("NominationId");
+                    b.HasKey("ID");
 
                     b.ToTable("Posts");
                 });
@@ -100,11 +96,11 @@ namespace ContestEACA.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ContestEACA.Models.Post", b =>
+            modelBuilder.Entity("ContestEACA.Models.Nomination", b =>
                 {
-                    b.HasOne("ContestEACA.Models.Nomination", "Nomination")
-                        .WithMany("Posts")
-                        .HasForeignKey("NominationId")
+                    b.HasOne("ContestEACA.Models.Post", "Post")
+                        .WithOne("Nomination")
+                        .HasForeignKey("ContestEACA.Models.Nomination", "PostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

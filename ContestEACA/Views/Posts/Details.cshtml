@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>ApplicationPost</h4>
+    <h4>Post</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -17,10 +17,16 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Work)
+            @Html.DisplayNameFor(model => model.TextWork)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Work)
+            @Html.DisplayFor(model => model.TextWork)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkWork)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LinkWork)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Rating)
@@ -28,9 +34,45 @@
         <dd>
             @Html.DisplayFor(model => model.Rating)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nomination)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nomination.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.File)
+        </dt>
+        <dd>
+            <a href=@Url.Content(ViewBag.FilePath)>@Url.Content(ViewBag.FilePath)</a>
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<div id="disqus_thread"></div>
+
+<script>
+
+    (function()
+        {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://contesteaca.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    )();
+
+</script>
+
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+<script id="dsq-count-scr" src="//contesteaca.disqus.com/count.js" async></script>

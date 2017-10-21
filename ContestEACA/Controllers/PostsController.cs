@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContestEACA.Data;
 using ContestEACA.Models;
+using ContestEACA.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-
-
 
 namespace ContestEACA.Controllers
 {
@@ -34,13 +33,26 @@ namespace ContestEACA.Controllers
         }
 
         // GET: ApplicationPosts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? nomination)
         {
-            ViewBag.Likes = await _context.Likes.ToListAsync();
+            IQueryable<Post> posts = _context.Posts.Include(x => x.Likes).Include(x => x.Nomination);
 
-            ViewBag.Posts = await _context.Posts.Include(x => x.Likes).ToListAsync();
-            
-            return View(await _context.Posts.OrderByDescending(x => x.Rating).ToListAsync());
+            if (nomination != null && nomination != 0)
+            {
+                posts = posts.Where(x => x.NominationId == nomination);
+            }
+
+            List<Nomination> nominations = await _context.Nominations.ToListAsync();
+            nominations.Insert(0, new Nomination { Id = 0, Name = "All" });
+
+            PostsViewModel viewModel = new PostsViewModel()
+            {
+                Posts = posts.ToList(),
+                Nominations = new SelectList(nominations, "Id", "Name"),
+                HelpNamePost = new Post()
+            };
+
+            return View(viewModel);
         }
 
 
@@ -54,12 +66,9 @@ namespace ContestEACA.Controllers
             var user = _userContext.Users.SingleOrDefault(x => x.Email == User.Identity.Name);
 
             foreach (var item in post.Likes)
-            {
                 if (item.UserId == user.Id)
-                {
                     return RedirectToAction("Index");
-                }
-            }
+
 
             post.Rating++;
 
@@ -81,24 +90,23 @@ namespace ContestEACA.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var applicationPost = await _context.Posts
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (applicationPost == null)
-            {
+            var post = await _context.Posts.Include(x => x.Likes).Include(x => x.Nomination).SingleOrDefaultAsync(m => m.ID == id);
+
+            if (post == null)
                 return NotFound();
-            }
 
-            return View(applicationPost);
+            ViewData["FilePath"] = post.File;
+            return View(post);
         }
 
         // GET: ApplicationPosts/Create
         [Authorize]
         public IActionResult Create()
         {
+            ViewData["NominationId"] = new SelectList(_context.Nominations, "Id", "Name");
+
             return View();
         }
 
@@ -106,23 +114,28 @@ namespace ContestEACA.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Work,Rating")] Post applicationPost, IFormFile uploadedFile)
+        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId")] Post post, IFormFile uploadedFile)
         {
             if (ModelState.IsValid)
             {
-                applicationPost.Author = User.Identity.Name;
+                post.Author = User.Identity.Name;
 
-                await AddFileToUser(applicationPost, uploadedFile);
+                post.DateCreated = DateTime.Now;
+                post.DateModified = DateTime.Now;
 
-                _context.Add(applicationPost);
+                await AddFileToUser(post, uploadedFile);
+
+                _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(applicationPost);
+            return View(post);
         }
 
-        private async Task AddFileToUser(Post applicationPost, IFormFile uploadedFile)
+        //Create File to IO
+        private async Task AddFileToUser(Post post, IFormFile uploadedFile)
         {
+
             if (uploadedFile != null)
             {
                 Directory.CreateDirectory(_appEnvironment.WebRootPath + "/Files/" + User.Identity.Name);
@@ -137,7 +150,7 @@ namespace ContestEACA.Controllers
                 _context.Files.Add(file);
                 _context.SaveChanges();
 
-                applicationPost.File = file.Path;
+                post.File = file.Path;
             }
         }
 
@@ -146,52 +159,46 @@ namespace ContestEACA.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var applicationPost = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
-            if (applicationPost == null)
-            {
+            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+
+            if (post == null)
                 return NotFound();
-            }
-            return View(applicationPost);
+
+
+            ViewData["NominationId"] = new SelectList(_context.Nominations, "Id", "Name", post.NominationId);
+
+            return View(post);
         }
 
         // POST: ApplicationPosts/Edit/5
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Work,Rating")] Post applicationPost, IFormFile uploadedFile)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Rating,File,DateCreated,DateModified,Title,TextWork,LinkWork,NominationId")] Post post, IFormFile uploadedFile)
         {
-            if (id != applicationPost.ID)
-            {
+            if (id != post.ID)
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    applicationPost.Author = User.Identity.Name;
-                    await AddFileToUser(applicationPost, uploadedFile);
-                    _context.Update(applicationPost);
+                    post.Author = User.Identity.Name;
+                    post.DateModified = DateTime.Now;
+
+                    _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationPostExists(applicationPost.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ApplicationPostExists(post.ID)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(applicationPost);
+            return View(post);
         }
 
         // GET: ApplicationPosts/Delete/5
@@ -199,18 +206,14 @@ namespace ContestEACA.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var applicationPost = await _context.Posts
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (applicationPost == null)
-            {
+            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+
+            if (post == null)
                 return NotFound();
-            }
 
-            return View(applicationPost);
+            return View(post);
         }
 
         // POST: ApplicationPosts/Delete/5
@@ -219,10 +222,16 @@ namespace ContestEACA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var applicationPost = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Posts.Remove(applicationPost);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+            var user = _userManager.GetUserAsync(User).Result;
+            if (user.Email == post.Author)
+            {
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return PartialView("DeletedNotUser");
         }
 
         private bool ApplicationPostExists(int id)

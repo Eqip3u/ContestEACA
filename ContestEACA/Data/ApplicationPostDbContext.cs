@@ -12,6 +12,8 @@ namespace ContestEACA.Data
 
         public DbSet<Like> Likes { get; set; }
 
+        public DbSet<Nomination> Nominations { get; set; }
+
         public ApplicationPostDbContext(DbContextOptions<ApplicationPostDbContext> options)
             : base(options)
         {

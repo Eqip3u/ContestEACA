@@ -42,7 +42,11 @@ namespace ContestEACA
                 googleOptions.ClientSecret = "TO7T2VvDculmMh71NvSOXn-Y";
             });
 
-            
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = "2027478304198988";
+                facebookOptions.AppSecret = "adc2b6b22b5f3f03b417f5f599f2473a";
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

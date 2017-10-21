@@ -11,9 +11,10 @@ using System;
 namespace ContestEACA.Migrations
 {
     [DbContext(typeof(ApplicationPostDbContext))]
-    partial class ApplicationPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171021080159_NewStory2")]
+    partial class NewStory2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,21 +70,15 @@ namespace ContestEACA.Migrations
 
                     b.Property<string>("Author");
 
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime>("DateModified");
-
                     b.Property<string>("File");
-
-                    b.Property<string>("LinkWork");
 
                     b.Property<int>("NominationId");
 
                     b.Property<int>("Rating");
 
-                    b.Property<string>("TextWork");
-
                     b.Property<string>("Title");
+
+                    b.Property<string>("Work");
 
                     b.HasKey("ID");
 
