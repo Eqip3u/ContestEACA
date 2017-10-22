@@ -172,11 +172,42 @@ namespace ContestEACA.Controllers
             return View(post);
         }
 
+        //POST: Change File To User
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeFile(int id, Post post, IFormFile uploadedFile)
+        {
+            if (id != post.ID)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    post.Author = User.Identity.Name;
+                    post.DateModified = DateTime.Now;
+
+                    await AddFileToUser(post, uploadedFile);
+
+                    _context.Update(post);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ApplicationPostExists(post.ID)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(post);
+        }
+
         // POST: ApplicationPosts/Edit/5
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Rating,File,DateCreated,DateModified,Title,TextWork,LinkWork,NominationId")] Post post, IFormFile uploadedFile)
+        public async Task<IActionResult> Edit(int id, Post post)
         {
             if (id != post.ID)
                 return NotFound();

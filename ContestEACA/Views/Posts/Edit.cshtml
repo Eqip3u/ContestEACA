@@ -10,6 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
@@ -17,6 +18,10 @@
             <input type="hidden" asp-for="File" />
             <input type="hidden" asp-for="DateCreated" />
             <input type="hidden" asp-for="DateModified" />
+
+            <div class="form-group">
+                <p>*Форма для изменения содержимого работы</p>
+            </div>
 
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -36,10 +41,7 @@
                 <span asp-validation-for="LinkWork" class="text-danger"></span>
             </div>
 
-            @*<div class="form-group">
-                <label class="control-label">Upload File</label>
-                <input type="file" name="uploadedFile" class="form-control" /><br>
-            </div>*@
+
 
             <div class="form-group">
                 <label asp-for="NominationId" class="control-label"></label>
@@ -48,13 +50,40 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default btn-danger" />
+            </div>
+        </form>
+
+        <hr />
+
+        <form asp-action="ChangeFile" enctype="multipart/form-data">
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="Rating" />
+            <input type="hidden" asp-for="DateCreated" />
+            <input type="hidden" asp-for="DateModified" />
+            <input type="hidden" asp-for="Title" />
+            <input type="hidden" asp-for="TextWork" />
+            <input type="hidden" asp-for="LinkWork" />
+            <input type="hidden" asp-for="NominationId" />
+
+            <div class="form-group">
+                <p>*Отдельная форма для изменения файла работы</p>
             </div>
 
             <div class="form-group">
-                <p>*Для изменения файла работы, удалите эту запись и создайте новую</p>
+                <label class="control-label">Upload File</label>
+                <input type="file" name="uploadedFile" class="form-control" />
             </div>
+
+            <div class="form-group">
+                <input type="submit" value="ChangeFile" class="btn btn-default btn-danger" />
+            </div>
+
         </form>
+
+        <hr />
+
+
     </div>
 </div>
 
