@@ -1,0 +1,42 @@
+{
+  "name": "bootstrap-autohide-navbar",
+  "version": "1.0.0",
+  "description": "A small jquery plugin to show/hide twitter bootstrap 3 navbar on scroll.",
+  "main": "dist/bootstrap-autohide-navbar.js",
+  "scripts": {
+    "build": "gulp"
+  },
+  "keywords": [
+    "navbar",
+    "bootstrap",
+    "jquery",
+    "plugin",
+    "auto hide"
+  ],
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamrelos/bootstrap-autohide-navbar.git"
+  },
+  "author": "Christian Soler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iamrelos/bootstrap-autohide-navbar/issues"
+  },
+  "homepage": "https://github.com/iamrelos/bootstrap-autohide-navbar#readme",
+  "dependencies": {
+    "jquery": ">=1.9.1",
+    "bootstrap": "~3.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-minify": "0.0.14",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-typescript": "^3.2.1",
+    "typescript": "^2.4.2"
+  }
+}

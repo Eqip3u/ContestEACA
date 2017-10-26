@@ -5,62 +5,46 @@
 }
 <script id="dsq-count-scr" src="//san2blog.disqus.com/count.js" async></script>
 
-<h2>Details</h2>
+<div class="container">
+    <div class="row">
+        <div class=" col-sm-4"> 
+            <h1>@Html.DisplayFor(model => model.Title)</h1>
+            <h2>@Html.DisplayFor(model => model.Author.FirstName) @Html.DisplayFor(model => model.Author.LastName)</h2>
+        </div>
+        <div class=" col-sm-4">
+            <h1> Рейтинг: @Html.DisplayFor(model => model.Rating) <a href="#" >Нравится</a> </h1>
+            <h2> Номинация: @Html.DisplayFor(model => model.Nomination.Name) </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"> 
+        <h1>@Html.DisplayNameFor(model => model.TextWork) </h1>
+        <p>@Html.DisplayFor(model => model.TextWork)</p></div>
 
-<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TextWork)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TextWork)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.LinkWork)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.LinkWork)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Author)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Nomination)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nomination.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.File)
-        </dt>
-        <dd>
-            <a href=@Url.Content(ViewBag.FilePath)>@Url.Content(ViewBag.FilePath)</a>
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
+        <div class="col-sm-8">
+            <div>
+                @if(ViewBag.LinkEnable)
+                {
+                <div class="vid">
+                    <iframe width="560" height="315" src="//www.youtube.com/embed/@ViewBag.ParsURL" allowfullscreen=""></iframe>
+                    <a href=@Url.Content(ViewBag.FilePath)> Посмотреть конкурсную работу </a>
+                </div>
+                }
+                else
+                {
+                <div>
+                    <p>
+                        <a href=@Url.Content(ViewBag.FilePath)> Посмотреть конкурсную работу </a>
+                    </p>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="disqus_thread"></div>
-
+    
 <script>
 
     (function()

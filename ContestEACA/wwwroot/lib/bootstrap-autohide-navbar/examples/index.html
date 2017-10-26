@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Show/Hide Bootstrap 3 Navbar on Scroll (jQuery Plugin)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+  <style>
+    body {
+      padding-top: 50px;
+    }
+
+    .row {
+      margin: 0;
+      padding: 0;
+    }
+
+    .row [class^="col-"] {
+      padding: 0;
+    }
+
+    .navbar-default {
+      border: 0;
+      background-color: white;
+    }
+
+    img {
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+      border-top: 4px solid black;
+      border-bottom: 4px solid black;
+    }
+
+    img:first-child {
+      border-top: none;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-top" aria-expanded="false"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        <a class="navbar-brand" href="/">GTA 5</a>
+      </div>
+      <div class="collapse navbar-collapse" id="navbar-top">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a id="disable-auto-hide" href="#" data-toggle="collapse" data-target=".navbar-collapse.in">Disable</a></li>
+          <li><a href="http://keypunchers.io/" data-toggle="collapse" data-target=".navbar-collapse.in">KeyPunchers.io</a></li>
+          <li><a href="https://github.com/iamrelos" data-toggle="collapse" data-target=".navbar-collapse.in">Github</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="row">
+    <div class="col-sm-12"><img class="img-reponsive" width="100%" src="https://s-media-cache-ak0.pinimg.com/originals/80/da/d8/80dad861713da7e95f76fb034536890d.jpg" /></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4"><img class="img-reponsive" width="100%" src="https://howfix.net/wp-content/uploads/2016/12/GTA-Online-Bikers.jpg" /></div>
+    <div class="col-sm-4"><img class="img-reponsive" width="100%" src="https://i.ytimg.com/vi/jl2xNWeujZs/maxresdefault.jpg" /></div>
+    <div class="col-sm-4"><img class="img-reponsive" width="100%" src="http://assets2.ignimgs.com/2013/09/12/gta-v-heistsjpg-e94705_1280w.jpg" /></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6"><img class="img-reponsive" width="100%" src="http://www.grandtheftauto5.fr/images/artworks-officiels/gta5-artwork-78-hd.jpg" /></div>
+    <div class="col-sm-6"><img class="img-reponsive" width="100%" src="https://i2.wp.com/akihabarablues.com/wp-content/uploads/2015/12/trevor-gta-v.jpg" /></div>
+  </div>
+    <div class="row">
+    <div class="col-sm-4"><img class="img-reponsive" width="100%" src="http://www.igta5.com/images/official-artwork-wade.jpg" /></div>
+    <div class="col-sm-4"><img class="img-reponsive" width="100%" src="http://www.grandtheftauto5.fr/images/artworks-officiels/gta5-artwork-56-hd.jpg" /></div>
+    <div class="col-sm-4"><img class="img-reponsive" width="100%" src="https://www.videogamesartwork.com/sites/default/files/images/image/1377109004/gtav_trevor_with_van_addition_01.jpg" /></div>
+  </div>
+
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+  <script src="../dist/bootstrap-autohide-navbar.js"></script>
+  <script>
+    $(function () {
+      'use strict';
+
+      var autohide = $('.navbar').bootstrapAutoHideNavbar({
+        disableAutoHide: false,
+        delta: 5,
+        duration: 250,
+        shadow: true
+      });
+
+      $('#disable-auto-hide').on('click', function (e) {
+        e.preventDefault();
+
+        var isDisable = autohide.settings.disableAutoHide;
+
+        autohide.setDisableAutoHide(!isDisable);
+
+        if (isDisable)
+          $(this).text('Disable');
+        else
+          $(this).text('Enable');
+      });
+    });
+  </script>
+</body>
+
+</html>

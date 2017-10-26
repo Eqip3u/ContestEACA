@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "_Layout";
+}
+<div class=" jumbotron info ">
+    <p>Вы не можете это сделать. Ваша почта @User.Identity.Name. будет передана соответствующие органы.</p>
+    <p> <img class="col-md-12 img-responsive" src="http://cont.ws/uploads/pic/2017/8/Navalny_2018_logo.svg.png" /> </p>
+</div>
+
+@{ 
+    var name = User.Identity.Name;
+}
+
+

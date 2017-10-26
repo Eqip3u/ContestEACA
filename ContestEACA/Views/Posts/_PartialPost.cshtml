@@ -1,0 +1,47 @@
+﻿@model ContestEACA.Models.Post
+
+@{ 
+    int conRating = @Model.Rating + 1;
+}
+
+<div class="container col-sm-3 post">
+
+    <div>
+
+        <h2><a asp-action="Details" asp-route-id="@Model.ID">  @*@Html.DisplayNameFor(x => x.Title):*@ @Model.Title  </a> </h2>
+
+        <p> @Html.DisplayNameFor(x => x.AuthorId): @Model.Author.FirstName  @Model.Author.LastName </p>
+        <p> @Html.DisplayNameFor(x => x.NominationId): @Model.Nomination.Name </p>
+
+    </div>
+
+    
+    <p id="rating_@Model.ID"> @Model.Rating </p>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a id="likeAjax_@Model.ID" class=" btn btn-default glyphicon glyphicon-star">Like</a>
+    }
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#likeAjax_@Model.ID').click(function () {
+            $.ajax({
+                url: '/Posts/LikeUp/@Model.ID',
+                dataType: "html",
+                success: function (data) {
+                    $('#rating_@Model.ID').html('@conRating');
+                },
+                error: function (response) {
+                    alert("Вы уже оценивали эту работу");
+                }
+            });
+        });
+    });
+</script>
+
+
+

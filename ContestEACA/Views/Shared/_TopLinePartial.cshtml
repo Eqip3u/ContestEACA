@@ -1,0 +1,32 @@
+﻿
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<ul class="nav navbar-nav">
+    <li>
+        <a asp-area="" asp-controller="Posts" asp-action="Index">Конкурсные работы</a>
+    </li>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li>
+            <a asp-area="" asp-controller="MemberPanel" asp-action="Index">Мои работы</a>
+        </li>
+        @if (user != null)
+        {
+            if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
+            {
+            <li>
+                <a asp-area="" asp-controller="AdminPanel" asp-action="Index">Панель администрирования</a>
+            </li>
+
+            <li>
+                <a asp-area="" asp-controller="Nominations" asp-action="Index">Номинации</a>
+            </li>
+                }
+            }
+        }
+</ul>
+
