@@ -32,7 +32,7 @@ namespace ContestEACA.Controllers
         // GET: Posts
         public async Task<IActionResult> Index(int? nomination)
         {
-            IQueryable<Post> posts = _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination);
+            IQueryable<Post> posts = _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File);
 
             if (nomination != null && nomination != 0)
             {
@@ -103,7 +103,7 @@ namespace ContestEACA.Controllers
             if (id == null)
                 return NotFound();
 
-            var post = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).SingleOrDefaultAsync(m => m.ID == id);
+            var post = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == id);
 
             if (post == null)
                 return NotFound();
@@ -116,7 +116,7 @@ namespace ContestEACA.Controllers
             else
                 ViewBag.LinkEnable = false;
 
-            ViewData["FilePath"] = post.File;
+            ViewData["FilePath"] = post.File.Path;
 
             return View(post);
         }
@@ -128,7 +128,7 @@ namespace ContestEACA.Controllers
             if (id == null)
                 return NotFound();
 
-            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+            var post = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == id);
 
             if (post == null)
                 return NotFound();
@@ -154,7 +154,9 @@ namespace ContestEACA.Controllers
 
             var user = _userManager.GetUserAsync(User).Result;
 
-            if (!(user.Email == post.Author.Email) || await EmailConfirmed())
+            var updatepost = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == post.ID);
+
+            if (!(user.Id == updatepost.AuthorId) || await EmailConfirmed())
             {
                 return PartialView("_AccessDenied");
             }
@@ -163,10 +165,10 @@ namespace ContestEACA.Controllers
             {
                 try
                 {
-                    post.Author = user;
-                    post.DateModified = DateTime.Now;
+                    updatepost.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+                    updatepost.DateModified = DateTime.Now;
 
-                    _context.Update(post);
+                    _context.Update(updatepost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

@@ -107,7 +107,9 @@ namespace ContestEACA.Controllers
 
             var user = await _userManager.GetUserAsync(User);
 
-            if (!(user.Email == post.Author.Email))
+            var updatepost = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == post.ID);
+
+            if (!(user.Email == updatepost.Author.Email))
             {
                 return PartialView("_AccessDenied");
             }
@@ -116,12 +118,12 @@ namespace ContestEACA.Controllers
             {
                 try
                 {
-                    post.Author = user;
-                    post.DateModified = DateTime.Now;
+                    updatepost.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+                    updatepost.DateModified = DateTime.Now;
 
-                    await AddFileToPost(post, uploadedFile);
+                    await AddFileToPost(updatepost, uploadedFile);
 
-                    _context.Update(post);
+                    _context.Update(updatepost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
