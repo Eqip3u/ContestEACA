@@ -102,14 +102,11 @@ namespace ContestEACA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeFile(int id, Post post, IFormFile uploadedFile)
         {
-            if (id != post.ID)
-                return NotFound();
+            var resultpost = await _context.Posts
+                .Include(x => x.Nomination)
+                .SingleOrDefaultAsync(m => m.ID == id);
 
-            var user = await _userManager.GetUserAsync(User);
-
-            var updatepost = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == post.ID);
-
-            if (!(user.Email == updatepost.Author.Email))
+            if (!(_userManager.GetUserAsync(User).Result.Email == resultpost.Author.Email))
             {
                 return PartialView("_AccessDenied");
             }
@@ -118,12 +115,9 @@ namespace ContestEACA.Controllers
             {
                 try
                 {
-                    updatepost.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
-                    updatepost.DateModified = DateTime.Now;
+                    await AddFileToPost(resultpost, uploadedFile);
 
-                    await AddFileToPost(updatepost, uploadedFile);
-
-                    _context.Update(updatepost);
+                    _context.Update(resultpost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -136,6 +130,35 @@ namespace ContestEACA.Controllers
             return View(post);
         }
 
+        //Helper Edit POST
+        private async Task UpdatePropertyPost(Post post, Post resultpost)
+        {
+            resultpost.Title = post.Title;
+            resultpost.TextWork = post.TextWork;
+            resultpost.LinkWork = post.LinkWork;
+            resultpost.NominationId = post.NominationId;
+            resultpost.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == _userManager.GetUserAsync(User).Result.Id);
+            resultpost.DateModified = DateTime.Now;
+        }
 
+        // Helper Details View
+        private void CheckFileAndLink(Post post)
+        {
+            if (post.LinkWork != null)
+            {
+                ParsingURLYouTube(post);
+                ViewBag.LinkEnable = true;
+            }
+            else
+                ViewBag.LinkEnable = false;
+
+            if (post.File != null)
+            {
+                ViewData["FilePath"] = post.File.Path;
+                ViewBag.FileEnable = true;
+            }
+            else
+                ViewBag.FileEnable = false;
+        }
     }
 }

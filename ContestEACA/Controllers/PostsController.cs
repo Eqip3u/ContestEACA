@@ -32,7 +32,9 @@ namespace ContestEACA.Controllers
         // GET: Posts
         public async Task<IActionResult> Index(int? nomination)
         {
-            IQueryable<Post> posts = _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File);
+            IQueryable<Post> posts = _context.Posts
+                .Include(x => x.Author)
+                .Include(x => x.Nomination);
 
             if (nomination != null && nomination != 0)
             {
@@ -72,8 +74,6 @@ namespace ContestEACA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId")] Post post, IFormFile uploadedFile)
         {
-            var user = _userManager.GetUserAsync(User).Result;
-
             if (await EmailConfirmed())
             {
                 return PartialView("_AccessDenied");
@@ -81,7 +81,7 @@ namespace ContestEACA.Controllers
 
             if (ModelState.IsValid)
             {
-                post.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+                post.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == _userManager.GetUserAsync(User).Result.Id);
 
                 post.DateCreated = DateTime.Now;
                 post.DateModified = DateTime.Now;
@@ -103,20 +103,16 @@ namespace ContestEACA.Controllers
             if (id == null)
                 return NotFound();
 
-            var post = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == id);
+            var post = await _context.Posts
+                .Include(x => x.Author)
+                .Include(x => x.Nomination)
+                .Include(x => x.File)
+                .SingleOrDefaultAsync(m => m.ID == id);
 
             if (post == null)
                 return NotFound();
 
-            if (post.LinkWork != null)
-            {
-                ParsingURLYouTube(post);
-                ViewBag.LinkEnable = true;
-            }
-            else
-                ViewBag.LinkEnable = false;
-
-            ViewData["FilePath"] = post.File.Path;
+            CheckFileAndLink(post);
 
             return View(post);
         }
@@ -128,7 +124,9 @@ namespace ContestEACA.Controllers
             if (id == null)
                 return NotFound();
 
-            var post = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == id);
+            var post = await _context.Posts
+                .Include(x => x.Nomination)
+                .SingleOrDefaultAsync(m => m.ID == id);
 
             if (post == null)
                 return NotFound();
@@ -152,11 +150,13 @@ namespace ContestEACA.Controllers
             if (id != post.ID)
                 return NotFound();
 
-            var user = _userManager.GetUserAsync(User).Result;
+            var user = await _userManager.GetUserAsync(User);
 
-            var updatepost = await _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination).Include(x => x.File).SingleOrDefaultAsync(m => m.ID == post.ID);
+            var resultpost = await _context.Posts
+                .Include(x => x.Nomination)
+                .SingleOrDefaultAsync(m => m.ID == id);
 
-            if (!(user.Id == updatepost.AuthorId) || await EmailConfirmed())
+            if (!(user.Id == resultpost.AuthorId) || await EmailConfirmed())
             {
                 return PartialView("_AccessDenied");
             }
@@ -165,10 +165,9 @@ namespace ContestEACA.Controllers
             {
                 try
                 {
-                    updatepost.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
-                    updatepost.DateModified = DateTime.Now;
+                    await UpdatePropertyPost(post, resultpost);
 
-                    _context.Update(updatepost);
+                    _context.Update(resultpost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

@@ -23,21 +23,23 @@
 
         <div class="col-sm-8">
             <div>
+
                 @if(ViewBag.LinkEnable)
                 {
                 <div class="vid">
                     <iframe width="560" height="315" src="//www.youtube.com/embed/@ViewBag.ParsURL" allowfullscreen=""></iframe>
-                    <br />
-                    <a href="@Url.Content(ViewBag.FilePath)"> Посмотреть конкурсную работу </a>
                 </div>
+                }
+
+                <br />
+
+                @if (ViewBag.FileEnable)
+                {
+                    <a href="@Url.Content(ViewBag.FilePath)"> Посмотреть конкурсную работу </a>
                 }
                 else
                 {
-                <div>
-                    <p>
-                        <a href="@Url.Content(ViewBag.FilePath)"> Посмотреть конкурсную работу </a>
-                    </p>
-                </div>
+                    <p>Участник не выложил никаких файлов</p>
                 }
             </div>
         </div>
