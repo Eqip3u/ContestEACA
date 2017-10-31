@@ -8,16 +8,21 @@ namespace ContestEACA.Models.ManageViewModels
 {
     public class IndexViewModel
     {
-        public string Username { get; set; }
+        [Display(Name = "Имя")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Фамилия")]
+        public string LastName { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
 
         [Required]
         [EmailAddress]
+        [Display(Name = "Почта")]
         public string Email { get; set; }
 
         [Phone]
-        [Display(Name = "Phone number")]
+        [Display(Name = "Номер телефона")]
         public string PhoneNumber { get; set; }
 
         public string StatusMessage { get; set; }

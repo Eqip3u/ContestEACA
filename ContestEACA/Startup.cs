@@ -25,15 +25,13 @@ namespace ContestEACA
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddDbContext<ApplicationUserContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>( opts => {
+            services.AddIdentity<ApplicationUser, IdentityRole>(opts => {
                     opts.Password.RequiredLength = 5;
                     opts.Password.RequireNonAlphanumeric = false;
-                    opts.Password.RequireLowercase = false; 
+                    opts.Password.RequireLowercase = false;
                     opts.Password.RequireUppercase = false;
                     opts.Password.RequireDigit = false;
                 })
@@ -76,6 +74,7 @@ namespace ContestEACA
 
             app.UseAuthentication();
 
+           
 
             app.UseMvc(routes =>
             {

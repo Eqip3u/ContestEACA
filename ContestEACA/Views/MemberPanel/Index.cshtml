@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    string colortr;
 }
 
 <h2>Мои работы</h2>
@@ -41,9 +42,13 @@ else
     <tbody>
 @foreach (var item in Model)
 {
+    if (item.Status == StatusPost.AwaitingForModeration) { colortr = "warning"; }
+    else if (item.Status == StatusPost.Accept) {colortr = "success"; }
+    else { colortr = "danger"; }
+
     if (item.Author.Email == User.Identity.Name)
     {
-        <tr>
+        <tr class=@colortr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -57,7 +62,7 @@ else
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author.FirstName) 
+                @Html.DisplayFor(modelItem => item.Author.FirstName)
                 @Html.DisplayFor(modelItem => item.Author.LastName)
             </td>
             <td>

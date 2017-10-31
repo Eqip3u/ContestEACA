@@ -34,7 +34,9 @@ namespace ContestEACA.Controllers
         {
             IQueryable<Post> posts = _context.Posts
                 .Include(x => x.Author)
-                .Include(x => x.Nomination);
+                .Include(x => x.Nomination)
+                .Include(x => x.Cover)
+                .Where(x => x.Status == StatusPost.Accept);
 
             if (nomination != null && nomination != 0)
             {
@@ -72,7 +74,7 @@ namespace ContestEACA.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId")] Post post, IFormFile uploadedFile)
+        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId")] Post post, IFormFile uploadedFile, IFormFile uploadedCover)
         {
             if (await EmailConfirmed())
             {
@@ -83,10 +85,13 @@ namespace ContestEACA.Controllers
             {
                 post.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == _userManager.GetUserAsync(User).Result.Id);
 
+                post.Status = StatusPost.AwaitingForModeration;
+
                 post.DateCreated = DateTime.Now;
                 post.DateModified = DateTime.Now;
 
                 await AddFileToPost(post, uploadedFile);
+                await AddPhotoToPost(post, uploadedCover);
 
                 _context.Add(post);
                 await _context.SaveChangesAsync();
@@ -107,6 +112,7 @@ namespace ContestEACA.Controllers
                 .Include(x => x.Author)
                 .Include(x => x.Nomination)
                 .Include(x => x.File)
+                .Include(x => x.Cover)
                 .SingleOrDefaultAsync(m => m.ID == id);
 
             if (post == null)
@@ -165,7 +171,12 @@ namespace ContestEACA.Controllers
             {
                 try
                 {
-                    await UpdatePropertyPost(post, resultpost);
+                    resultpost.Title = post.Title;
+                    resultpost.TextWork = post.TextWork;
+                    resultpost.LinkWork = post.LinkWork;
+                    resultpost.NominationId = post.NominationId;
+                    resultpost.Author = await _context.Users.FirstOrDefaultAsync(x => x.Id == _userManager.GetUserAsync(User).Result.Id);
+                    resultpost.DateModified = DateTime.Now;
 
                     _context.Update(resultpost);
                     await _context.SaveChangesAsync();

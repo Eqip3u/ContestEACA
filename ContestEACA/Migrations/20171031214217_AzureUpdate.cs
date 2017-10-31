@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ContestEACA.Migrations
 {
-    public partial class AzureDatabaseInit : Migration
+    public partial class AzureUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -190,12 +190,14 @@ namespace ContestEACA.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CoverId = table.Column<int>(type: "int", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FileId = table.Column<int>(type: "int", nullable: true),
                     LinkWork = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NominationId = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     TextWork = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -206,6 +208,12 @@ namespace ContestEACA.Migrations
                         name: "FK_Posts_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Posts_Files_CoverId",
+                        column: x => x.CoverId,
+                        principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -290,6 +298,11 @@ namespace ContestEACA.Migrations
                 name: "IX_Posts_AuthorId",
                 table: "Posts",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_CoverId",
+                table: "Posts",
+                column: "CoverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_FileId",

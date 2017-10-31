@@ -1,0 +1,40 @@
+﻿
+@model EmailConfirmedViewModel
+
+@{
+    ViewData["Title"] = "Настройка почты";
+    ViewData.AddActivePage(ManageNavPages.EmailConfirmed);
+}
+
+<h4>@ViewData["Title"]</h4>
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+ 
+<div class="row">
+    <div class="col-md-6">
+
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control" disabled />
+                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control" disabled />
+                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-remove text-danger"></span></span>
+                    </div>
+                    <p>Вы не подтвердили почту</p>
+                    <button asp-action="SendVerificationEmail" class="btn btn-link">Отправить код на почту</button>
+                }
+            </div>
+        </form>
+
+    </div>
+</div>

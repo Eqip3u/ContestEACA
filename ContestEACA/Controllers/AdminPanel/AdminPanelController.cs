@@ -27,13 +27,24 @@ namespace ContestEACA.Controllers
         }
 
         // GET: AdminPanel
-        public async Task<IActionResult> Index(int? nomination, SortState sortOrder = SortState.DateCreateAsc)
+        public async Task<IActionResult> Index(int? nomination, int page = 1, SortState sortOrder = SortState.Status)
         {
-            IQueryable<Post> posts = _context.Posts.Include(x => x.Author).Include(x => x.Likes).Include(x => x.Nomination);
 
-            ViewData["RatingSort"] = sortOrder == SortState.RatingAsc ? SortState.RatingDesc : SortState.RatingAsc;
-            ViewData["DateCreateSort"] = sortOrder == SortState.DateCreateAsc ? SortState.DateCreateDesc : SortState.DateCreateAsc;
+            int pageSize = 5;
 
+
+            IQueryable<Post> posts = _context.Posts
+                .Include(x => x.Author)
+                .Include(x => x.Likes)
+                .Include(x => x.Nomination);
+
+            //Фильтрация
+            if (nomination != null && nomination != 0)
+            {
+                posts = posts.Where(x => x.NominationId == nomination);
+            }
+
+            //Сортировка
             switch (sortOrder)
             {
                 case SortState.RatingAsc:
@@ -48,29 +59,80 @@ namespace ContestEACA.Controllers
                 case SortState.DateCreateDesc:
                     posts = posts.OrderByDescending(x => x.DateCreated);
                     break;
+                case SortState.Status:
+                    posts = posts.OrderBy(x => x.Status);
+                    break;
                 default:
-                    posts = posts.OrderBy(x => x.DateCreated);
+                    posts = posts.OrderBy(x => x.Status);
                     break;
             }
 
-            if (nomination != null && nomination != 0)
-            {
-                posts = posts.Where(x => x.NominationId == nomination);
-            }
+            //Пагинация
+            var count = await posts.CountAsync();
+            var items = await posts.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-            List<Nomination> nominations = await _context.Nominations.ToListAsync();
-            nominations.Insert(0, new Nomination { Id = 0, Name = "All" });
 
-            PostsViewModel viewModel = new PostsViewModel()
+            AdminIndexViewModel viewModel = new AdminIndexViewModel()
             {
-                Posts = posts.AsNoTracking().ToList(),
-                Nominations = new SelectList(nominations, "Id", "Name"),
-                HelpNamePost = new Post()
+                PageViewModel = new PageViewModel(count, page, pageSize),
+                SortViewModel = new AdminSortViewModel(sortOrder),
+                FilterViewModel = new AdminFilterViewModel(_context.Nominations.ToList(), nomination),
+                Posts = items,
+                HelpNamePost = items.FirstOrDefault()
             };
 
             return View(viewModel);
         }
 
+
+        // GET: AdminPanel/SetStatusPost/5
+        [HttpGet]
+        public async Task<IActionResult> SetStatusPost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var post = await _context.Posts
+                .SingleOrDefaultAsync(m => m.ID == id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var resultpost = new ChangeStatusPostViewModel()
+            {
+                Post = post,
+                Status = post.Status
+            };
+
+            return View(resultpost);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetStatusPost(int? id, ChangeStatusPostViewModel model)
+        {
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Status = model.Status;
+
+            _context.Update(post);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
 
         // GET: AdminPanel/Delete/5

@@ -1,0 +1,42 @@
+﻿@model IndexViewModel
+@{
+    ViewData["Title"] = "Профиль";
+    ViewData.AddActivePage(ManageNavPages.Index);
+}
+
+<h4>@ViewData["Title"]</h4>
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-default">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,7 +1,8 @@
-﻿@model ContestEACA.Models.ViewModels.PostsViewModel
+﻿@model ContestEACA.Models.ViewModels.AdminIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
+    string colortr;
 }
 
 <h2>Панель администратора</h2>
@@ -13,7 +14,7 @@
         <div class="form-inline form-group">
 
             <label class="control-label">filter: </label>
-            @Html.DropDownList("nomination", Model.Nominations as SelectList, htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownList("nomination", Model.FilterViewModel.Nominations as SelectList, htmlAttributes: new { @class = "form-control" })
 
             <input type="submit" value="Filter" class="btn btn-default" />
         </div>
@@ -40,21 +41,27 @@
             </th>
 
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.RatingSort">@Html.DisplayNameFor(model => model.HelpNamePost.Rating)</a>
+                <a asp-action="Index" asp-route-sortOrder="@(Model.SortViewModel.RatingSort)"
+                   asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)">Рейтинг</a>
+
             </th>
 
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.DateCreateSort">@Html.DisplayNameFor(model => model.HelpNamePost.DateCreated)</a>
+                <a asp-action="Index" asp-route-sortOrder="@(Model.SortViewModel.DateSort)"
+                   asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)">Дата создания</a>
             </th>
 
             <th>
-
+                Инструменты
             </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Posts) {
-        <tr>
+    if (item.Status == StatusPost.AwaitingForModeration) { colortr = "warning"; }
+    else if (item.Status == StatusPost.Accept) { colortr = "success"; }
+    else { colortr = "danger"; }
+        <tr class="@colortr">
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -75,11 +82,33 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @*<a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |*@
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="SetStatusPost" asp-route-id="@item.ID">Изменить статус</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Удалить</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

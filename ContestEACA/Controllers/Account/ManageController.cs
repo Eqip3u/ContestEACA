@@ -56,7 +56,8 @@ namespace ContestEACA.Controllers
 
             var model = new IndexViewModel
             {
-                Username = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
@@ -101,13 +102,58 @@ namespace ContestEACA.Controllers
                 }
             }
 
-            StatusMessage = "Your profile has been updated";
+            var firstname = user.FirstName;
+            if (model.FirstName != firstname)
+            {
+                user.FirstName = model.FirstName;
+                var setFirstNameResult = await _userManager.UpdateAsync(user);
+                if (!setFirstNameResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting first name for user with ID '{user.Id}'.");
+                }
+            }
+
+            var lastname = user.LastName;
+            if (model.LastName != lastname)
+            {
+                user.LastName = model.LastName;
+                var setLastNameResult = await _userManager.UpdateAsync(user);
+                if (!setLastNameResult.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting last name for user with ID '{user.Id}'.");
+                }
+            }
+
+            StatusMessage = "Профиль обновлён";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EmailConfirmed(EmailConfirmedViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            EmailConfirmedViewModel viewmodel = new EmailConfirmedViewModel()
+            {
+                Email = user.Email,
+                IsEmailConfirmed = user.EmailConfirmed,
+                StatusMessage = StatusMessage
+            };
+
+            return View(viewmodel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendVerificationEmail(IndexViewModel model)
+        public async Task<IActionResult> SendVerificationEmail(EmailConfirmedViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -125,8 +171,8 @@ namespace ContestEACA.Controllers
             var email = user.Email;
             await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
 
-            StatusMessage = "Verification email sent. Please check your email.";
-            return RedirectToAction(nameof(Index));
+            StatusMessage = "Письмо с кодом отправлено. Пожалуйтса проверте свою почту.";
+            return RedirectToAction(nameof(EmailConfirmed));
         }
 
         [HttpGet]
@@ -172,7 +218,7 @@ namespace ContestEACA.Controllers
 
             await _signInManager.SignInAsync(user, isPersistent: false);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "Вы изменили пароль";
 
             return RedirectToAction(nameof(ChangePassword));
         }
@@ -220,7 +266,7 @@ namespace ContestEACA.Controllers
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);
-            StatusMessage = "Your password has been set.";
+            StatusMessage = "Теперь вы можете заходить на сайт с помощью почты и пароля";
 
             return RedirectToAction(nameof(SetPassword));
         }
@@ -302,7 +348,7 @@ namespace ContestEACA.Controllers
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);
-            StatusMessage = "The external login was removed.";
+            StatusMessage = "Внешний логин был удален.";
             return RedirectToAction(nameof(ExternalLogins));
         }
 

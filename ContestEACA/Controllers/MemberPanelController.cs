@@ -28,7 +28,11 @@ namespace ContestEACA.Controllers
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);
 
-            var posts = _context.Users.Include(x => x.Posts).FirstOrDefault(x => x.Id == user.Id).Posts;
+            var posts = _context.Users
+                .Include(x => x.Posts)
+                .FirstOrDefault(x => x.Id == user.Id)
+                .Posts
+                .OrderByDescending(x => x.Rating);
             
             ViewBag.CountWork = posts.Count();
 

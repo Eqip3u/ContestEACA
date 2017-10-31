@@ -5,6 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContestEACA.Models
 {
+    public enum StatusPost
+    {
+        [Display(Name = "Принято")]
+        Accept,
+
+        [Display(Name = "Отказано")]
+        Denied,
+
+        [Display(Name = "В ожиданий модерации")]
+        AwaitingForModeration
+    }
+
     public class Post
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,6 +40,12 @@ namespace ContestEACA.Models
         [Display(Name = "Дата изменения")]
         public DateTime DateModified { get; set; }
 
+        [Display(Name = "Статус")]
+        public StatusPost Status { get; set; }
+
+        [Display(Name = "Фото участников проекта")]
+        public int? CoverId { get; set; }
+        public FileModel Cover { get; set; }
 
         [Display(Name = "Файл")]
         public int? FileId { get; set; }

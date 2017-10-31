@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 using ContestEACA.Models;
 using ContestEACA.Models.AccountViewModels;
 using ContestEACA.Services;
-using ContestEACA.Extensions;
+using System.Web;
 
 namespace ContestEACA.Controllers
 {
@@ -232,11 +232,8 @@ namespace ContestEACA.Controllers
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme); 
-
-                    var emailService = new EmailService();
-
-                    emailService.SendEmailAsync(model.Email, "Confirm your account", $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
@@ -389,7 +386,10 @@ namespace ContestEACA.Controllers
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
+
+                var resultCode = HttpUtility.UrlEncode(code);
+
+                var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, resultCode, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
                    $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
@@ -433,7 +433,10 @@ namespace ContestEACA.Controllers
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var code = HttpUtility.UrlDecode(model.Code);
+
+            var result = await _userManager.ResetPasswordAsync(user, code, model.Password);
+
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
