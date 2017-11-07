@@ -1,0 +1,83 @@
+﻿@model ContestEACA.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Пользователь";
+}
+
+<h2>Пользователь</h2>
+
+<div>
+    <h4>@Model.UserName</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <br />
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd>
+            @if (String.IsNullOrEmpty(Model.PhoneNumber)){<p>Пользователь не указал телефон</p>}
+            else { <p>@Model.PhoneNumber</p> }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+</div>
+
+
+<h2>Работы пользователя @Model.FirstName @Model.LastName</h2>
+
+
+<table class="table table-reponsive">
+    <thead>
+        <tr>
+            <th>
+                Конкурс
+            </th>
+            <th>
+                Номинация
+            </th>
+            <th>
+                Название
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Posts) {
+
+        <tr>
+
+            <td class="col-md-3">
+                @Html.DisplayFor(modelItem => item.Contest.Name)
+            </td>
+
+            <td class="col-md-3">
+                @Html.DisplayFor(modelItem => item.Nomination.Name)
+            </td>
+
+            <td class="col-md-3">
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

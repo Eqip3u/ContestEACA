@@ -1,34 +1,46 @@
-﻿@model ContestEACA.Models.ViewModels.AdminIndexViewModel
+﻿@model ContestEACA.Models.ViewModels.SFPIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
     string colortr;
 }
 
-<h2>Панель администратора</h2>
+<h2 class="text-center">Панель администратора</h2>
 
-<hr />
-
-<form method="get">
-    <div class="row">
-        <div class="form-inline form-group">
-
-            <label class="control-label">filter: </label>
-            @Html.DropDownList("nomination", Model.FilterViewModel.Nominations as SelectList, htmlAttributes: new { @class = "form-control" })
-
-            <input type="submit" value="Filter" class="btn btn-default" />
-        </div>
-    </div>
-</form>
-<hr />
-
-<div>
-    <a asp-area="" asp-controller="Roles" asp-action="Index">Назначение ролей пользователей</a>  
+<div class="text-center">
+    <a asp-area="" asp-controller="Roles" asp-action="Index">Назначение ролей пользователей</a>
 </div>
-<hr />
-<table class="table">
+
+<div class="col-xs-12 ">
+    <form method="get">
+
+        <div style="margin-top:1em;" class="row">
+            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1  nomination">
+                <p>Конкурсы</p>
+            </div>
+
+            <div class="col-xs-3 col-md-3 select_list">
+                @Html.DropDownList("contest", Model.FilterViewModel.Contests as SelectList, htmlAttributes: new { @class = "form-control" })
+            </div>
+
+            <div class="col-xs-2 col-md-3">
+                <input type="submit" value="Фильтровать" class="btn btn-primary select_butn" />
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
+
+
+
+<table class="table table-reponsive">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.HelpNamePost.ContestId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.HelpNamePost.Title)
             </th>
@@ -37,49 +49,57 @@
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.HelpNamePost.Nomination)
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NominationSort)"
+                   asp-route-contest="@(Model.FilterViewModel.SelectedContests)">@Html.DisplayNameFor(model => model.HelpNamePost.NominationId)
+                </a>
             </th>
 
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@(Model.SortViewModel.RatingSort)"
-                   asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)">Рейтинг</a>
-
-            </th>
-
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@(Model.SortViewModel.DateSort)"
-                   asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)">Дата создания</a>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.RatingSort)"
+                   asp-route-contest="@(Model.FilterViewModel.SelectedContests)">@Html.DisplayNameFor(model => model.HelpNamePost.Rating)
+                </a>
             </th>
 
             <th>
                 Инструменты
             </th>
+
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Posts) {
+
     if (item.Status == StatusPost.AwaitingForModeration) { colortr = "warning"; }
     else if (item.Status == StatusPost.Accept) { colortr = "success"; }
     else { colortr = "danger"; }
+
         <tr class="@colortr">
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
+
+            <td class="col-md-2">
+                <a asp-controller="Contests" asp-action="Details" asp-route-id="@item.ContestId">@Html.DisplayFor(modelItem => item.Contest.Name)</a>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.FirstName)
-                @Html.DisplayFor(modelItem => item.Author.LastName)
+
+            <td class="col-md-3">
+                <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.ID">@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+
+            <td class="col-md-3">
+                <a asp-action="UserDetails" asp-route-userId="@item.AuthorId">
+                    @Html.DisplayFor(modelItem => item.Author.FirstName)
+                    @Html.DisplayFor(modelItem => item.Author.LastName)
+                </a>
                 <br />
                 @Html.DisplayFor(modelItem => item.Author.Email)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nomination.Name)
+
+            <td class="col-md-3">
+                <a asp-controller="Nominations" asp-action="Details" asp-route-id="@item.NominationId">@Html.DisplayFor(modelItem => item.Nomination.Name)</a>
             </td>
 
-            <td>
+            <td class="col-md-1">
                 @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
                 <a asp-action="SetStatusPost" asp-route-id="@item.ID">Изменить статус</a> |
@@ -94,7 +114,7 @@
 {
     <a asp-action="Index"
        asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-       asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)"
+       asp-route-contest="@(Model.FilterViewModel.SelectedContests)"
        asp-route-sortorder="@(Model.SortViewModel.Current)"
        class="btn btn-default btn">
         <i class="glyphicon glyphicon-chevron-left"></i>
@@ -105,7 +125,7 @@
 {
     <a asp-action="Index"
        asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-       asp-route-nomination="@(Model.FilterViewModel.SelectedNomination)"
+       asp-route-contest="@(Model.FilterViewModel.SelectedContests)"
        asp-route-sortorder="@(Model.SortViewModel.Current)"
        class="btn btn-default btn">
         Вперед

@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ContestEACA.Models.ViewModels
 {
-    public class AdminFilterViewModel
+    public class SFPFilterViewModel
     {
-        public AdminFilterViewModel(List<Nomination> nominations, int? nomination)
+        public SFPFilterViewModel(List<Contest> contests, int? contest)
         {
-            nominations.Insert(0, new Nomination { Name = "Все", Id = 0 });
-            Nominations = new SelectList(nominations, "Id", "Name", nomination);
-            SelectedNomination = nomination;
+            contests.Insert(0, new Contest { Name = "Все", Id = 0 });
+            Contests = new SelectList(contests, "Id", "Name", contest);
+            SelectedContests = contest;
         }
-        public SelectList Nominations { get; private set; }
-        public int? SelectedNomination{ get; private set; }
+        public SelectList Contests { get; private set; }
+        public int? SelectedContests{ get; private set; }
     }
 }

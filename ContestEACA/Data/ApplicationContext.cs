@@ -11,6 +11,8 @@ namespace ContestEACA.Data
         {
         }
 
+        public DbSet<Contest> Contests { get; set; }
+
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
         public DbSet<FileModel> Files { get; set; }
@@ -22,7 +24,7 @@ namespace ContestEACA.Data
         public DbSet<Nomination> Nominations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
-        {
+        {     
             base.OnModelCreating(builder);
         }
     }

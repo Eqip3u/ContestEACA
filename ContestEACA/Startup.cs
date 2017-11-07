@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ContestEACA.Data;
 using ContestEACA.Models;
 using ContestEACA.Services;
+using Digillect.AspNetCore.Authentication.VKontakte;
 
 namespace ContestEACA
 {
@@ -43,6 +44,13 @@ namespace ContestEACA
                 googleOptions.ClientId = "87881739727-i3p27sbrbdva1dgrglelskk92u3scs7b.apps.googleusercontent.com";
                 googleOptions.ClientSecret = "TO7T2VvDculmMh71NvSOXn-Y";
             });
+
+            services.AddAuthentication().AddVKontakte(vkOptions =>
+            {
+                vkOptions.ClientId = "6220892";
+                vkOptions.ClientSecret = "gN4GRzQaMV4HQ1E6dJ0y";
+            });
+
 
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {

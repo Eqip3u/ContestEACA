@@ -37,7 +37,40 @@ namespace ContestEACA.Controllers
                     if (!ApplicationPostExists(post.ID)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "MemberPanel");
+            }
+            return View(post);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePhoto(int id, Post post, IFormFile uploadedFile)
+        {
+            var resultpost = await _context.Posts
+                .Include(x => x.Nomination)
+                .SingleOrDefaultAsync(m => m.ID == id);
+
+            if (!(_userManager.GetUserAsync(User).Result.Email == resultpost.Author.Email))
+            {
+                return PartialView("_AccessDenied");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await AddPhotoToPost(resultpost, uploadedFile);
+
+                    _context.Update(resultpost);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ApplicationPostExists(post.ID)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction("Index", "MemberPanel");
             }
             return View(post);
         }

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContestEACA.Data;
 using ContestEACA.Models;
 using ContestEACA.Models.EnumHelpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using ContestEACA.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using ContestEACA.Services;
+using ContestEACA.Models.ManageViewModels;
 
 namespace ContestEACA.Controllers
 {
@@ -20,17 +17,26 @@ namespace ContestEACA.Controllers
     public class AdminPanelController : Controller
     {
         private readonly ApplicationContext _context;
+        private UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
-        public AdminPanelController(ApplicationContext context)
+
+        public AdminPanelController(
+            UserManager<ApplicationUser> userManager, 
+            ApplicationContext context,
+            IEmailSender emailSender)
         {
+            _userManager = userManager;
             _context = context;
+            _emailSender = emailSender;
         }
 
+
         // GET: AdminPanel
-        public async Task<IActionResult> Index(int? nomination, int page = 1, SortState sortOrder = SortState.Status)
+        public async Task<IActionResult> Index(int? contest, int page = 1, SortState sortOrder = SortState.Status)
         {
 
-            int pageSize = 5;
+            int pageSize = 10;
 
 
             IQueryable<Post> posts = _context.Posts
@@ -39,9 +45,9 @@ namespace ContestEACA.Controllers
                 .Include(x => x.Nomination);
 
             //Фильтрация
-            if (nomination != null && nomination != 0)
+            if (contest != null && contest != 0)
             {
-                posts = posts.Where(x => x.NominationId == nomination);
+                posts = posts.Where(x => x.ContestId == contest);
             }
 
             //Сортировка
@@ -59,6 +65,12 @@ namespace ContestEACA.Controllers
                 case SortState.DateCreateDesc:
                     posts = posts.OrderByDescending(x => x.DateCreated);
                     break;
+                case SortState.NominationAsc:
+                    posts = posts.OrderBy(x => x.Nomination.Name);
+                    break;
+                case SortState.NominationDesc:
+                    posts = posts.OrderByDescending(x => x.Nomination.Name);
+                    break;
                 case SortState.Status:
                     posts = posts.OrderBy(x => x.Status);
                     break;
@@ -72,11 +84,11 @@ namespace ContestEACA.Controllers
             var items = await posts.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
 
-            AdminIndexViewModel viewModel = new AdminIndexViewModel()
+            SFPIndexViewModel viewModel = new SFPIndexViewModel()
             {
-                PageViewModel = new PageViewModel(count, page, pageSize),
-                SortViewModel = new AdminSortViewModel(sortOrder),
-                FilterViewModel = new AdminFilterViewModel(_context.Nominations.ToList(), nomination),
+                PageViewModel = new SFPPageViewModel(count, page, pageSize),
+                SortViewModel = new SFPSortViewModel(sortOrder),
+                FilterViewModel = new SFPFilterViewModel(_context.Contests.ToList(), contest),
                 Posts = items,
                 HelpNamePost = items.FirstOrDefault()
             };
@@ -84,6 +96,16 @@ namespace ContestEACA.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UserDetails(string userId)
+        {
+            return View(await _context.Users
+                .Include(x => x.Posts)
+                    .ThenInclude(x => x.Nomination)
+                .Include(x => x.Posts)
+                    .ThenInclude(x => x.Contest)
+                .FirstOrDefaultAsync(x => x.Id == userId));
+        }
 
         // GET: AdminPanel/SetStatusPost/5
         [HttpGet]
@@ -131,7 +153,20 @@ namespace ContestEACA.Controllers
             _context.Update(post);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            var user = _context.Users.FirstOrDefault(x => x.Id == post.AuthorId);
+
+            // На продакшене раскоментить
+            //await _emailSender.SendEmailModerateStatusPost(user.Email);
+
+            ModerateWorkViewModel viewmodel = new ModerateWorkViewModel()
+            {
+                Posts = _context.Posts
+                .Include(x => x.Contest)
+                .Include(x => x.Nomination)
+                .Where(x => x.Status == StatusPost.AwaitingForModeration)
+            };
+
+            return View("~/Views/Manage/ModerateWork.cshtml", viewmodel);
         }
 
 

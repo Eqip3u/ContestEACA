@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace ContestEACA.Models.ViewModels
 {
-    public class AdminIndexViewModel
+    public class SFPIndexViewModel
     {
         public IEnumerable<Post> Posts { get; set; }
-        public PageViewModel PageViewModel { get; set; }
-        public AdminFilterViewModel FilterViewModel { get; set; }
-        public AdminSortViewModel SortViewModel { get; set; }
+        public SFPPageViewModel PageViewModel { get; set; }
+        public SFPFilterViewModel FilterViewModel { get; set; }
+        public SFPSortViewModel SortViewModel { get; set; }
         public Post HelpNamePost { get; set; }
     }
 }

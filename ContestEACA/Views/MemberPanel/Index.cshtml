@@ -1,82 +1,195 @@
-﻿@model IEnumerable<ContestEACA.Models.Post>
+﻿@model ContestEACA.Models.ViewModels.SFPIndexViewModel
+
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
+
+    var user = await UserManager.GetUserAsync(User);
+
     string colortr;
 }
 
-<h2>Мои работы</h2>
 
-@if (ViewBag.CountWork == 0)
+
+@if (await ViewBag.CountWork == 0)
 {
-    @await Html.PartialAsync("_ConfirmedEmail")
+    <br />
+    <br />
+    <br />
+    <hr />
+    if (await UserManager.IsEmailConfirmedAsync(user))
+    {
+        <p style="font: 18px Roboto" class="jumbotron  text-center">
+            Для добавления работ перейдите на страницу конкурсов -> выберите конкурс -> Работы участников -> Добавить работу
+        </p>
+    }
+    else
+    {
+        <p style="font: 18px Roboto" class="jumbotron text-center">
+            Для добавления работы пожалуйста подтвердите Email - <strong>@user.Email</strong> (время ожидания: 1-5 минут)
+        </p>
+        <p style="font: 18px Roboto" class="jumbotron text-center">
+           Так же вы можете зайти в <a asp-controller="Manage" asp-action="Index">личный кабинет</a> и послать письмо ещё раз
+        </p>
+    }
+    <hr />
 }
 else
 {
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TextWork)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LinkWork)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th>
 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model)
-{
-    if (item.Status == StatusPost.AwaitingForModeration) { colortr = "warning"; }
-    else if (item.Status == StatusPost.Accept) {colortr = "success"; }
-    else { colortr = "danger"; }
+    <h2  class="text-center" > Ваши работы: </h2>
 
-    if (item.Author.Email == User.Identity.Name)
-    {
-        <tr class=@colortr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TextWork)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LinkWork)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.FirstName)
-                @Html.DisplayFor(modelItem => item.Author.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-controller="Posts" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-controller="Posts" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-controller="Posts"  asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
+    <div class="row center_row">
+    <blockquote class="blockquote">
+        <p> <i class="fa fa-square green" aria-hidden="true"></i> - одобренные модератором конкурса</p>
+        <p> <i class="fa fa-square yellow" aria-hidden="true"></i> - в ожидании модерации</p>
+        <p> <i class="fa fa-square red" aria-hidden="true"></i> - не прошедшие модерацию</p>
+    </blockquote>
 
-    }
+    
+    <form method="get">
+
+         <div style="margin-top:1em;" class="row">
+            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1  nomination">
+                <p>Конкурсы</p>
+            </div>
+
+            <div class="col-xs-3 col-md-3 select_list">
+                @Html.DropDownList("contest", Model.FilterViewModel.Contests as SelectList, htmlAttributes: new { @class = "form-control" })
+            </div>
+
+            <div class="col-xs-2 col-md-3">
+                <input type="submit" value="Фильтровать" class="btn btn-primary select_butn" />
+
+            </div>
+            @*<div class="col-xs-7 addjob">
+                <a asp-action="CreatePostInContest" asp-controller="Contests" asp-route-id="@ViewBag.ContestId">&nbsp;Добавить работу</a>
+            </div>*@
+        </div>
+        
+            <!-- <div class="form-inline btn-group form-horizontal">
+                    <div class="col-xs-3 col-md-4">
+                <label style="font-weight: normal;" > По конкурсам:</label>
+                    </div>
+
+                    <div class="col-xs-6 col-md-5">
+                @Html.DropDownList("contest", Model.FilterViewModel.Contests as SelectList, htmlAttributes: new { @class = "form-control" })
+                    </div>
+
+                     <div class="col-xs-3 addjob">
+                <button type="submit" value="Filter" class="btn btn-primary hidden-xs hidden-sm" > Фильтровать </button>
+                    
+                 <button type="submit" value="Filter" 
+                 class="btn btn-social-icon btn-vk ">
+                    <i class="fa fa-search"></i> 
+                </button>
+                </div> -->
+            
+      
+        
+    </form>
+    </div>
+
+    <table class="table table-reponsive">
+        <thead>
+            <tr>
+                <th>
+                    Статус
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HelpNamePost.ContestId)
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.NominationSort)"
+                       asp-route-contest="@(Model.FilterViewModel.SelectedContests)">
+                        <span class="caret"></span>
+                        @Html.DisplayNameFor(model => model.HelpNamePost.NominationId)
+                    </a>
+                <th>
+                    @Html.DisplayNameFor(model => model.HelpNamePost.Title)
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@(Model.SortViewModel.RatingSort)"
+                       asp-route-contest="@(Model.FilterViewModel.SelectedContests)">
+                        <span class="caret"></span>
+                        @Html.DisplayNameFor(model => model.HelpNamePost.Rating)
+                    </a>
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Posts)
+            {
+                if (item.Status == StatusPost.AwaitingForModeration) { colortr = "warning"; }
+                else if (item.Status == StatusPost.Accept) { colortr = "success"; }
+                else { colortr = "danger"; }
+
+                <tr class="@colortr">
+                    <td>
+                        
+                        @if (colortr == "success")
+                        {
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                        }
+                        else if (colortr == "warning")
+                        {
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                        }
+                        else
+                        {
+                           <i class="fa fa-times" aria-hidden="true"></i>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Contests" asp-action="Details" asp-route-id="@item.ContestId">@Html.DisplayFor(modelItem => item.Contest.Name)</a>
+                    </td>
+                    <td>
+                        <a asp-controller="Nominations" asp-action="Details" asp-route-id="@item.NominationId">@Html.DisplayFor(modelItem => item.Nomination.Name)</a>
+                        
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Posts" asp-route-id="@item.ID">Изменить</a> |
+                        <a asp-action="Details" asp-controller="Posts" asp-route-id="@item.ID">Страница работы</a> |
+                        <a asp-action="Delete" asp-controller="Posts" asp-route-id="@item.ID">Удалить</a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-contest="@(Model.FilterViewModel.SelectedContests)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-contest="@(Model.FilterViewModel.SelectedContests)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-default btn">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
 }

@@ -1,24 +1,33 @@
 ﻿@model ContestEACA.Models.Nomination
-
 @{
     ViewData["Title"] = "Details";
 }
-
-<h2>Details</h2>
-
+<h2>Подробно о номинации</h2>
 <div>
-    <h4>Nomination</h4>
+    <h4>Номинация</h4>
     <hr />
     <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContestId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.Name)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

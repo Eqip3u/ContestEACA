@@ -11,7 +11,6 @@ namespace ContestEACA.Controllers
         [Authorize]
         public IActionResult LikeUp(int? id)
         {
-
             var post = _context.Posts.Include(x => x.Likes).SingleOrDefault(x => x.ID == id);
 
             var user = _context.Users.SingleOrDefault(x => x.Email == User.Identity.Name);
@@ -20,21 +19,21 @@ namespace ContestEACA.Controllers
                 if (item.UserId == user.Id)
                     return StatusCode(400);
 
-
             post.Rating++;
 
             _context.Update(post);
 
-            var like = new Like();
-            like.PostId = post.ID;
-            like.UserId = user.Id;
+            var like = new Like()
+            {
+                PostId = post.ID,
+                UserId = user.Id
+            };
+
             _context.Likes.Add(like);
 
             _context.SaveChanges();
 
             return Json(post.Rating);
-
         }
-
     }
 }

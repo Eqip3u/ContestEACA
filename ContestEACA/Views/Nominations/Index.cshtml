@@ -1,19 +1,22 @@
 ﻿@model IEnumerable<ContestEACA.Models.Nomination>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Номинации";
 }
 
-<h2>Index</h2>
+<h2>Список всех номинации во всех конкурсах</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-route-HelperId="@ViewBag.ContestId" asp-action="Create">Создать новую номинацию</a>
 </p>
 <table class="table">
     <thead>
         <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Contest)
                 </th>
             <th></th>
         </tr>
@@ -25,9 +28,11 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.Contest.Name)
+            </td>
+            <td>
+                <a asp-route-HelperId="@ViewBag.ContestId" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-route-HelperId="@ViewBag.ContestId" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
             </td>
         </tr>
 }

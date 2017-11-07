@@ -1,0 +1,121 @@
+﻿@model IEnumerable<ContestEACA.Models.Contest>
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Конкурсы";
+    var user = await UserManager.GetUserAsync(User);
+
+    int FPSec = 0;
+    string image;
+}
+
+
+
+
+<div id="fullpage">
+
+    <section id="info" data-anchor="info" class="section">
+        <div class="container center-block">
+
+            <h2 class="text-center">Конкурсы</h2>
+
+            @if(user != null)
+            {
+                @if(await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
+                {
+                    <p class="text-center">
+                        <a class="btn btn-danger" asp-action="Create">Создать новый конкурс</a> 
+                    </p>
+                }           
+            }
+            <div  class="down">
+              <i id="moveDown"class="fa fa-angle-down fa-5x" ></i></div>
+             </div>
+    </section>
+
+    @foreach (var item in Model.Where(x => x.Status == StatusContest.Active))
+    {
+        if(item.PreImage != null)
+        {
+            image = "url(" + item.PreImage.Path + ")";
+        }
+        else
+        {
+            image = "0";
+        }
+
+        <section style="background-image:@image;
+        "
+
+                 data-anchor="section_@FPSec"
+                 class="section active background"
+                 id="section active">
+
+                @await Html.PartialAsync("_PartialContest", item)
+
+        </section>
+
+
+        FPSec++;
+
+    }
+
+    @foreach (var item in Model.Where(x => x.Status == StatusContest.Coming))
+    {
+        if (item.PreImage != null)
+        {
+            image = "url(" + item.PreImage.Path + ")";
+        }
+        else
+        {
+            image = "0";
+        }
+        <section style="background-image:@image;
+                         "
+                 data-anchor="section_@FPSec"
+                 class="section coming background"
+                 id="section coming">
+
+            @await Html.PartialAsync("_PartialContest", item)
+
+        </section>
+
+        FPSec++;
+    }
+
+    @foreach (var item in Model.Where(x => x.Status == StatusContest.Done))
+    {
+        if (item.PreImage != null)
+        {
+            image = "url(" + item.PreImage.Path + ")";
+        }
+        else
+        {
+            image = "0";
+        }
+        <section style="background-image:@image;
+                       "
+                 data-anchor="section_@FPSec"
+                 class="section done background"
+                 id="section done">
+
+            @await Html.PartialAsync("_PartialContest", item)
+
+        </section>
+
+        FPSec++;
+    }
+
+</div>
+
+<script>
+
+    //Удаляет у div(fullpage) родителя с Layout 
+    $("div#fullpage").unwrap();
+
+    $(document).on('click', '#moveTo', function () {
+        $.fn.fullpage.moveTo('active');
+    });
+
+</script>

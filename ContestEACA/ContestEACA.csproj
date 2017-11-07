@@ -4,6 +4,7 @@
     <UserSecretsId>aspnet-ContestEACA-F724A290-ED5A-420C-BAA7-BE56655B60AC</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Digillect.AspNetCore.Authentication.VKontakte" Version="2.0.0" />
     <PackageReference Include="MailKit" Version="1.18.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.0.0" />

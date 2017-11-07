@@ -7,6 +7,9 @@
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
     "fullpage.js": "^2.9.4",
-    "bootstrap-autohide-navbar": "^1.0.0"
+    "bootstrap-autohide-navbar": "^1.0.0",
+    "bootstrap-social": "^5.1.1",
+    "components-font-awesome": "^4.7.0",
+    "normalize-css": "^7.0.0"
   }
 }

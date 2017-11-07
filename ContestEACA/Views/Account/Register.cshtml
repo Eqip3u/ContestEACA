@@ -5,38 +5,73 @@
 
 
 
-<div class="row">
-    <div class="col-md-12 text-center flexbox">
-        <form class="text-left" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-            <h4>Создайте новый аккаунт</h4>
+  <div  class="jumbotron vertical-center">
+         <div class="container">
+        <form  spellcheck="false" class="text-left" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+            <h2  class="text-center" >Создайте новый аккаунт</h2>
             
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label>Имя</label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                
+                    <div class="input-group text-center">
+                        <span  class="input-group-addon name">
+                                Имя &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span>
+                        
+                        <input asp-for="FirstName" class="form-control" />
+                        
+                    </div>
+                         <span asp-validation-for="FirstName"class="input-group text-center text-danger"></span>
+                
+                
+                    <div class="input-group text-center">
+                        <span class="input-group-addon">
+                                 Фамилия
+                        </span>
+                        <input asp-for="LastName" class="form-control" />
+                    </div>
+                        <span asp-validation-for="LastName" class="input-group text-center text-danger"></span>
+               
+
+
+            <div class="input-group text-center">
+                <!-- <label > Почта</label> -->
+                <span class="input-group-addon">
+                         <i class="fa fa-envelope fa" aria-hidden="true"></i>
+                </span>
+                <input asp-for="Email" class="form-control"  placeholder="Введите вашу почту"/>
+                
             </div>
-            <div class="form-group">
-                <label>Фамилия</label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
+                <span asp-validation-for="Email" class="input-group text-center text-danger"></span>
+
+
+            <div class="input-group text-center">
+                <!-- <label>Пароль</label> -->
+                <span class="input-group-addon">
+                        <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+                </span>
+                <input asp-for="Password" class="form-control" placeholder="Введите пароль" />
+                
             </div>
-            <div class="form-group">
-                <label > Почта</label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <span asp-validation-for="Password" class="input-group text-center text-danger"></span>
+
+
+
+
+            <div class="input-group text-center">
+                <!-- <label>Подтвердите пароль</label> -->
+                <span class="input-group-addon">
+                        <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+                </span>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Повторите пароль" />   
             </div>
-            <div class="form-group">
-                <label>Пароль</label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <span class="input-group text-center text-danger" asp-validation-for="ConfirmPassword"></span>
+
+
+                    <!-- BUTTON -->
+
+            <div  style="margin-top:2%"class="form-group input-group">
+                     <button type="submit" class="btn btn-primary btn-block">Зарегестрироваться</button>
             </div>
-            <div class="form-group">
-                <label>Подтвердите пароль</label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default flexbox">Зарегестрироваться</button>
+           
         </form>
     </div>
 </div>

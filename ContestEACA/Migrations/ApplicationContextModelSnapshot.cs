@@ -76,6 +76,41 @@ namespace ContestEACA.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("ContestEACA.Models.Contest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("EndTime");
+
+                    b.Property<bool>("MainContest");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<int?>("PreImageId");
+
+                    b.Property<string>("PreText")
+                        .IsRequired();
+
+                    b.Property<string>("PreTitle")
+                        .IsRequired();
+
+                    b.Property<int?>("ProvisionId");
+
+                    b.Property<DateTime>("Rewarding");
+
+                    b.Property<DateTime>("StartTime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PreImageId");
+
+                    b.HasIndex("ProvisionId");
+
+                    b.ToTable("Contests");
+                });
+
             modelBuilder.Entity("ContestEACA.Models.FileModel", b =>
                 {
                     b.Property<int>("Id")
@@ -111,9 +146,15 @@ namespace ContestEACA.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("ContestId");
+
+                    b.Property<string>("Description");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
 
                     b.ToTable("Nominations");
                 });
@@ -124,6 +165,8 @@ namespace ContestEACA.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AuthorId");
+
+                    b.Property<int>("ContestId");
 
                     b.Property<int?>("CoverId");
 
@@ -148,6 +191,8 @@ namespace ContestEACA.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("ContestId");
 
                     b.HasIndex("CoverId");
 
@@ -266,6 +311,17 @@ namespace ContestEACA.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("ContestEACA.Models.Contest", b =>
+                {
+                    b.HasOne("ContestEACA.Models.FileModel", "PreImage")
+                        .WithMany()
+                        .HasForeignKey("PreImageId");
+
+                    b.HasOne("ContestEACA.Models.FileModel", "Provision")
+                        .WithMany()
+                        .HasForeignKey("ProvisionId");
+                });
+
             modelBuilder.Entity("ContestEACA.Models.Like", b =>
                 {
                     b.HasOne("ContestEACA.Models.Post", "Post")
@@ -274,11 +330,23 @@ namespace ContestEACA.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ContestEACA.Models.Nomination", b =>
+                {
+                    b.HasOne("ContestEACA.Models.Contest", "Contest")
+                        .WithMany("Nominations")
+                        .HasForeignKey("ContestId");
+                });
+
             modelBuilder.Entity("ContestEACA.Models.Post", b =>
                 {
                     b.HasOne("ContestEACA.Models.ApplicationUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
+
+                    b.HasOne("ContestEACA.Models.Contest", "Contest")
+                        .WithMany("Posts")
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ContestEACA.Models.FileModel", "Cover")
                         .WithMany()

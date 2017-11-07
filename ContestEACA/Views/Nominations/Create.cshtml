@@ -1,31 +1,45 @@
 ﻿@model ContestEACA.Models.Nomination
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Создание";
 }
 
-<h2>Create</h2>
+<h2>Создание номинации для: "@ViewBag.ContestName"</h2>
 
-<h4>Nomination</h4>
+<h4>Заполните поля</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" asp-route-HelperId="@ViewBag.ContestId">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div> 
+
+            <div class="form-group">
+                <label asp-for="ContestId" class="control-label">Убедитесь что выбран правильный конкурс</label>
+                <select asp-for="ContestId" class="form-control" asp-items="ViewBag.ContestIdList"></select>
             </div>
+
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-default" />
+            </div>
+
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Вернуться назад</a>
 </div>
 
 @section Scripts {

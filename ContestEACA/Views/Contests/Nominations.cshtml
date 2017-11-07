@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ContestEACA.Models.Nomination>
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Номинации";
+    var user = await UserManager.GetUserAsync(User);
+
+}
+<br />
+<h2>Список всех номинации для конкурса: "@ViewBag.ContestName"</h2>
+
+@if (user != null)
+{
+    if (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
+    {
+    <p>
+        <a class="btn btn-info" asp-controller="Nominations" asp-route-HelperId="@ViewBag.ContestId" asp-action="Create">Создать новую номинацию</a>
+    </p>
+    }
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-md-2">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="col-md-10">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                @if (user != null)
+                {
+                    if (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
+                    {
+                        <td>
+                            <a asp-route-HelperId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                            <a asp-route-HelperId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>

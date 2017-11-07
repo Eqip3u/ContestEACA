@@ -1,0 +1,87 @@
+﻿@model ContestEACA.Models.Contest
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = Model.Name;
+    var user = await UserManager.GetUserAsync(User);
+}
+<h2>Подробно о конкурсе</h2>
+
+<div>
+    <h4>Конкурс</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rewarding)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Rewarding)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PreTitle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PreTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PreText)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PreText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PreImageId)
+        </dt>
+        <dd>
+            <img style="width:50px; height:50px;" src="@Model.PreImage.Path" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProvisionId)
+        </dt>
+        <dd>
+            @if (Model.Provision != null)
+            {
+                <a href="@Url.Content(Model.Provision.Path)"> Посмотреть положение о конкурсе </a>
+            }
+            else
+            {
+                <p>Положения о конкурсе пока нет</p>
+            }
+        </dd>
+    </dl>
+</div>
+
+@if (user != null)
+{
+    @if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a>
+        </div>
+    }
+}
+

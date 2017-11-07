@@ -1,0 +1,57 @@
+﻿@model ContestEACA.Models.ManageViewModels.ModerateWorkViewModel
+
+@{
+    ViewData["Title"] = "Модерация работа";
+    ViewData.AddActivePage(ManageNavPages.ModerateWork);
+}
+
+<h2  style="margin-top:5%;" class="text-center ">Работы в ожиданий модерации</h2>
+
+ <div class="table-responsive">
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Конкурс
+            </th>
+            <th>
+                Номинация
+            </th>
+            <th>
+                Название
+            </th>
+            <th>
+                Автор
+            </th>
+            <th>
+                Расширения
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Posts)
+        {
+            <tr class="warning">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contest.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nomination.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.FirstName)
+                    @Html.DisplayFor(modelItem => item.Author.LastName)
+                </td>
+                <td>
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.ID">Подробно</a> |
+                    <a asp-controller="AdminPanel" asp-action="SetStatusPost" asp-route-id="@item.ID">Изменить статус</a> 
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+</div>

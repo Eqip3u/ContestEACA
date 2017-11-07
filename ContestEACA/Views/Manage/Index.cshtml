@@ -4,38 +4,52 @@
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 
-<h4>@ViewData["Title"]</h4>
-
-@Html.Partial("_StatusMessage", Model.StatusMessage)
+<h2 style="margin-top:5%;" class="text-center">@ViewData["Title"]</h2>
 
 
-<div class="row">
-    <div class="col-md-6">
-
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
-            </div>
 
 
-            <div class="form-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
-            </div>
+<div class="row text-center">
+    
+        @Html.Partial("_StatusMessage", Model.StatusMessage)
+        <form  method="post">
+           
 
-            <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
+                        <div class="input-group text-center">
+                        <span  class="input-group-addon name">
+                                Имя &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </span>
+                        
+                        <input asp-for="FirstName" class="form-control" />
+                        
+                    </div>
+                         <span asp-validation-for="FirstName"class="input-group text-center text-danger"></span>
+                
+                
+                    <div class="input-group text-center">
+                        <span class="input-group-addon">
+                                 Фамилия
+                        </span>
+                        <input asp-for="LastName" class="form-control" />
+                    </div>
+                        <span asp-validation-for="LastName" class="input-group text-center text-danger"></span>
+
+ 
+
+            <div class="input-group text-center ">
+                <span class="input-group-addon">
+                         <i class="fa fa-mobile fa" aria-hidden="true"></i>
+                </span>
+                <input asp-for="PhoneNumber"  class="form-control" placeholder="Номер телефона"/>
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
-
-            <button type="submit" class="btn btn-default">Сохранить</button>
+            <div  style="margin-top:2%" class="form-group input-group">
+                 <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+            </div>
         </form>
-    </div>
+    
 </div>
+
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

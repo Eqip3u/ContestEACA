@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ContestEACA.Migrations
 {
-    public partial class AzureUpdate : Migration
+    public partial class AzureMainContest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,19 +62,6 @@ namespace ContestEACA.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Files", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Nominations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Nominations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,12 +171,58 @@ namespace ContestEACA.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Contests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MainContest = table.Column<bool>(type: "bit", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PreImageId = table.Column<int>(type: "int", nullable: true),
+                    PreText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PreTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Contests_Files_PreImageId",
+                        column: x => x.PreImageId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Nominations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ContestId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Nominations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Nominations_Contests_ContestId",
+                        column: x => x.ContestId,
+                        principalTable: "Contests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ContestId = table.Column<int>(type: "int", nullable: false),
                     CoverId = table.Column<int>(type: "int", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -210,6 +243,12 @@ namespace ContestEACA.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Posts_Contests_ContestId",
+                        column: x => x.ContestId,
+                        principalTable: "Contests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Posts_Files_CoverId",
                         column: x => x.CoverId,
@@ -290,14 +329,29 @@ namespace ContestEACA.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Contests_PreImageId",
+                table: "Contests",
+                column: "PreImageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Likes_PostId",
                 table: "Likes",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Nominations_ContestId",
+                table: "Nominations",
+                column: "ContestId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorId",
                 table: "Posts",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_ContestId",
+                table: "Posts",
+                column: "ContestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_CoverId",
@@ -345,10 +399,13 @@ namespace ContestEACA.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Files");
+                name: "Nominations");
 
             migrationBuilder.DropTable(
-                name: "Nominations");
+                name: "Contests");
+
+            migrationBuilder.DropTable(
+                name: "Files");
         }
     }
 }

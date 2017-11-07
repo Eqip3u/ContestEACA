@@ -6,20 +6,23 @@
     ViewData.AddActivePage(ManageNavPages.EmailConfirmed);
 }
 
-<h4>@ViewData["Title"]</h4>
+<h2 style="margin-top:5%;" class="text-center">@ViewData["Title"]</h2>
 
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
  
-<div class="row">
-    <div class="col-md-6">
+<div class="row text-center">
+    
 
         <form method="post">
             <div class="form-group">
-                <label asp-for="Email"></label>
+               
                 @if (Model.IsEmailConfirmed)
                 {
-                    <div class="input-group">
+                    <div class="input-group ">
+                        									<span class="input-group-addon">
+                                        <i class="fa fa-envelope fa" aria-hidden="true"></i>
+                                    </span>
                         <input asp-for="Email" class="form-control" disabled />
                         <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
                     </div>

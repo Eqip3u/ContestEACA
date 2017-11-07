@@ -21,6 +21,8 @@ namespace ContestEACA.Views.Manage
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
+        public static string ModerateWork => "ModerateWork";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
@@ -28,6 +30,8 @@ namespace ContestEACA.Views.Manage
         public static string ExternalLoginsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ExternalLogins);
 
         public static string EmailConfirmedNavClass(ViewContext viewContext) => PageNavClass(viewContext, EmailConfirmed);
+
+        public static string ModerateWorkNavClass(ViewContext viewContext) => PageNavClass(viewContext, ModerateWork);
 
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
     

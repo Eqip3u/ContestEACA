@@ -11,6 +11,8 @@ namespace ContestEACA.Models.EnumHelpers
         RatingDesc,
         DateCreateAsc,
         DateCreateDesc,
+        NominationAsc,
+        NominationDesc,
         Status
     }
 }

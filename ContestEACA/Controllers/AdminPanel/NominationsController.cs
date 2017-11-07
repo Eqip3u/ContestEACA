@@ -24,10 +24,12 @@ namespace ContestEACA.Controllers
         // GET: Nominations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Nominations.ToListAsync());
+            var applicationContext = _context.Nominations.Include(n => n.Contest);
+            return View(await applicationContext.ToListAsync());
         }
 
         // GET: Nominations/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,7 +38,9 @@ namespace ContestEACA.Controllers
             }
 
             var nomination = await _context.Nominations
+                .Include(n => n.Contest)
                 .SingleOrDefaultAsync(m => m.Id == id);
+
             if (nomination == null)
             {
                 return NotFound();
@@ -46,8 +50,15 @@ namespace ContestEACA.Controllers
         }
 
         // GET: Nominations/Create
-        public IActionResult Create()
+        public IActionResult Create(int? HelperId)
         {
+            if (HelperId != null)
+                ViewData["ContestName"] = _context.Contests.FirstOrDefault(x => x.Id == HelperId).Name;
+            else
+                ViewData["ContestName"] = "Всех конкурсов";
+
+            ViewData["ContestId"] = HelperId;
+            ViewData["ContestIdList"] = new SelectList(_context.Contests, "Id", "Name", HelperId);
             return View();
         }
 
@@ -56,19 +67,28 @@ namespace ContestEACA.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Nomination nomination)
+        public async Task<IActionResult> Create(int? HelperId, [Bind("Id,Name,Description,ContestId")] Nomination nomination)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(nomination);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                ViewData["ContestName"] = _context.Contests.FirstOrDefault(x => x.Id == nomination.ContestId).Name;
+                ViewData["ContestId"] = HelperId;
+
+                return View("~/Views/Contests/Nominations.cshtml", await
+                        _context.Nominations
+                            .Where(x => x.ContestId == nomination.ContestId)
+                            .ToListAsync());
+
             }
+            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name", nomination.ContestId);
             return View(nomination);
         }
 
         // GET: Nominations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? HelperId, int? id)
         {
             if (id == null)
             {
@@ -80,6 +100,8 @@ namespace ContestEACA.Controllers
             {
                 return NotFound();
             }
+            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name", nomination.ContestId);
+
             return View(nomination);
         }
 
@@ -88,7 +110,7 @@ namespace ContestEACA.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Nomination nomination)
+        public async Task<IActionResult> Edit(int? HelperId, int id, [Bind("Id,Name,Description,ContestId")] Nomination nomination)
         {
             if (id != nomination.Id)
             {
@@ -113,13 +135,20 @@ namespace ContestEACA.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["ContestName"] = _context.Contests.FirstOrDefault(x => x.Id == nomination.ContestId).Name;
+                ViewData["ContestId"] = HelperId;
+
+                return View("~/Views/Contests/Nominations.cshtml", await
+                    _context.Nominations
+                        .Where(x => x.ContestId == nomination.ContestId)
+                        .ToListAsync());
             }
+            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name", nomination.ContestId);
             return View(nomination);
         }
 
         // GET: Nominations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? HelperId, int? id)
         {
             if (id == null)
             {
@@ -127,6 +156,7 @@ namespace ContestEACA.Controllers
             }
 
             var nomination = await _context.Nominations
+                .Include(n => n.Contest)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (nomination == null)
             {
@@ -139,12 +169,20 @@ namespace ContestEACA.Controllers
         // POST: Nominations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? HelperId, int id)
         {
             var nomination = await _context.Nominations.SingleOrDefaultAsync(m => m.Id == id);
             _context.Nominations.Remove(nomination);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            ViewData["ContestName"] = _context.Contests.FirstOrDefault(x => x.Id == nomination.ContestId).Name;
+            ViewData["ContestId"] = HelperId;
+
+            return View("~/Views/Contests/Nominations.cshtml", await
+                _context.Nominations
+                    .Where(x => x.ContestId == nomination.ContestId)
+                    .ToListAsync());
+
         }
 
         private bool NominationExists(int id)

@@ -1,13 +1,21 @@
 ﻿
 @model string
-
+<div  class="jumbotron vertical-center">
+        <div class="container">
+            <h2  class="text-center"  > Новая роль</h2>
+    
 <div asp-validation-summary="All" class="text-danger"></div>
-
+<div class="input-group text-center" >
 <form asp-action="Create" method="post">
-    <div class="form-group">
-        <label for="name">Новая роль</label>
-        <input name="name" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Добавить</button>
-</form>
+    
+    <span >  
+    <input name="name" class="form-control" />
+    </span> 
 
+    </span>  
+    <button  style="margin-top:4%;" type="submit" class="text-center btn btn-primary">Добавить</button>
+    </span>
+</form>
+</div>
+</div>
+</div>

@@ -59,6 +59,10 @@ namespace ContestEACA.Models
         public int NominationId { get; set; }
         public virtual Nomination Nomination { get; set; }
 
+        [Display(Name = "Конкурс")]
+        public int ContestId { get; set; }
+        public virtual Contest Contest { get; set; }
+
         public virtual ICollection<Like> Likes { get; set; }
     }
 }

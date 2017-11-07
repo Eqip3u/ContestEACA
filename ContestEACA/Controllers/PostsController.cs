@@ -58,9 +58,10 @@ namespace ContestEACA.Controllers
 
         // GET: Posts/Create
         [Authorize]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? id)
         {
             ViewData["NominationId"] = new SelectList(_context.Nominations, "Id", "Name");
+            ViewData["ContestId"] = new SelectList(_context.Contests, "Id", "Name");
 
             if (await EmailConfirmed())
             {
@@ -74,7 +75,7 @@ namespace ContestEACA.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId")] Post post, IFormFile uploadedFile, IFormFile uploadedCover)
+        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId,ContestId")] Post post, IFormFile uploadedFile, IFormFile uploadedCover)
         {
             if (await EmailConfirmed())
             {
@@ -95,7 +96,8 @@ namespace ContestEACA.Controllers
 
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Index", "MemberPanel");
             }
             return View(post);
         }
@@ -131,6 +133,7 @@ namespace ContestEACA.Controllers
                 return NotFound();
 
             var post = await _context.Posts
+                .Include(x => x.Contest)
                 .Include(x => x.Nomination)
                 .SingleOrDefaultAsync(m => m.ID == id);
 
@@ -142,7 +145,7 @@ namespace ContestEACA.Controllers
                 return PartialView("_AccessDenied");
             }
 
-            ViewData["NominationId"] = new SelectList(_context.Nominations, "Id", "Name", post.NominationId);
+            ViewData["NominationId"] = new SelectList(_context.Nominations.Where(x => x.ContestId == post.ContestId), "Id", "Name", post.NominationId);
 
             return View(post);
         }
@@ -186,7 +189,7 @@ namespace ContestEACA.Controllers
                     if (!ApplicationPostExists(post.ID)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "MemberPanel");
             }
             return View(post);
         }
@@ -230,7 +233,7 @@ namespace ContestEACA.Controllers
             {
                 _context.Posts.Remove(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "MemberPanel");
             }
 
             return PartialView("_AccessDenied");

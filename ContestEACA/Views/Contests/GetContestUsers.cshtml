@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ContestEACA.Models.Post>
+
+@{
+    ViewData["Title"] = "Список участников";
+}
+@if (Model.FirstOrDefault() == null)
+{
+    <h2>Участников пока нету</h2>
+}
+else
+{
+    <h2 class="text-center">Список участников "@Model.FirstOrDefault().Contest.Name"</h2>
+    <table class="table table-reponsive">
+        <thead>
+            <tr>
+                <th>
+                    Имя Фамилия
+                </th>
+                <th>
+                    Почта участника
+                </th>
+                <th>
+                    Номинация
+                </th>
+
+                <th>
+                    Название работы
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+
+                    <td class="col-md-3">
+                        @Html.DisplayFor(modelItem => post.Author.FirstName)
+                        @Html.DisplayFor(modelItem => post.Author.LastName)
+                    </td>
+
+                    <td class="col-md-3">
+                        @Html.DisplayFor(modelItem => post.Author.Email)
+                    </td>
+
+                    <td class="col-md-3">
+                        @Html.DisplayFor(modelItem => post.Nomination.Name)
+                    </td>
+
+                    <td class="col-md-3">
+                        @Html.DisplayFor(modelItem => post.Title)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

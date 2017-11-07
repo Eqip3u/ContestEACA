@@ -1,0 +1,96 @@
+﻿@model ContestEACA.Models.Contest
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "_PartialContest";
+    var user = await UserManager.GetUserAsync(User);
+
+    if (Model.Posts != null)
+    {
+        ViewData["CountWorks"] = Model.Posts.Count();
+    }
+    else
+    {
+        ViewData["CountWorks"] = 0;
+    }
+
+    if (Model.Nominations != null)
+    {
+        ViewData["CountNominations"] = Model.Nominations.Count();
+    }
+    else
+    {
+        ViewData["CountNominations"] = 0;
+    }
+}
+
+<div   class="container contest">
+
+    @if (user != null)
+    {
+        @if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
+        {
+            <div class="dropdown">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Иструменты администратора
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li>
+                        <a asp-action="Edit" asp-route-id="@Model.Id">Изменить </a>
+                    </li>
+                    <li>
+                        <a asp-action="GetContestUsers" asp-route-id="@Model.Id">Список участников</a>
+                    </li>
+                    @if (!Model.MainContest)
+                    {
+                        <li>
+                            <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@Model.Id">Сменить статус конкурса на "Главный"</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@Model.Id">Убрать флаг "Главный" с этого конкурса</a>
+                        </li>
+                    }
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a asp-action="Delete" asp-route-id="@Model.Id">Удалить конкурс </a>
+                    </li>
+                </ul>
+            </div>
+        }
+    }
+
+
+    <h1 class="text-center"> @Html.DisplayFor(modelItem => Model.Name)</h1>
+    <h3 class="text-center"> @Html.DisplayFor(modelItem => Model.PreTitle)</h3>
+
+
+
+    <p class="text-center">
+        @Html.DisplayFor(modelItem => Model.PreText)
+    </p>
+
+    <hr />
+
+    <p class="text-right"> Начало: @Html.DisplayFor(modelItem => Model.StartTime)  / Конец: @Html.DisplayFor(modelItem => Model.EndTime) </p>
+    <p class="text-right"> Награждение: @Html.DisplayFor(modelItem => Model.Rewarding)</p>
+
+    <ul class="nav navbar-nav">
+
+        <li>
+            <a class="btn btn-default" asp-action="Posts" asp-route-id="@Model.Id">Работы участников <span class="badge">@ViewBag.CountWorks</span></a>
+        </li>
+
+        <li>
+            <a class="btn btn-default" asp-action="Nominations" asp-route-id="@Model.Id">Номинации конкурса <span class="badge">@ViewBag.CountNominations</span> </a>
+        </li>
+        <li>
+            <a class="btn btn-default" asp-action="Details" asp-route-id="@Model.Id">Подробнее </a>
+        </li>
+
+    </ul>
+</div>

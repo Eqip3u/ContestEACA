@@ -1,5 +1,4 @@
-﻿
-@inject UserManager<ApplicationUser> UserManager
+﻿@inject UserManager<ApplicationUser> UserManager
 
 @{
     var user = await UserManager.GetUserAsync(User);
@@ -10,14 +9,17 @@
     <hr />
     if (await UserManager.IsEmailConfirmedAsync(user))
     {
-        <p>
-            <a asp-action="Create" asp-controller="Posts" class="btn btn-primary">Добавить работу</a>
+        <p class="text-center">
+            <a asp-action="CreatePostInContest" asp-controller="Contests" asp-route-id="@ViewBag.ContestId" class="btn btn-primary">Добавить работу</a>
         </p>
     }
     else
     {
-        <p>
-            Для добавления работы пожалуйста подтвердите Email -  @user.Email (время ожидания: 2-5 минут)
+        <p style="font: bold 18px Roboto" class="jumbotron text-center">
+            Для добавления работы пожалуйста подтвердите Email -  @user.Email (время ожидания: 1-5 минут)
+        </p>
+        <p style="font: bold 18px Roboto" class="jumbotron text-center">
+            Так же вы можете зайти в <a asp-controller="Manage" asp-action="Index">личный кабинет</a> и послать письмо ещё раз
         </p>
     }
     <hr />

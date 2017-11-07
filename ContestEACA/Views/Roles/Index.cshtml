@@ -1,21 +1,40 @@
 ﻿
 @model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
 
-<h2>Список ролей</h2>
-<table class="table">
+<h2 class="text-center">Список ролей</h2>
+<div class="center-row">
+<a class="btn btn-primary" style="" asp-action="Create"> <i class="fa fa-plus" aria-hidden="true"></i>Добавить роль</a>
+<a class="btn btn-primary" asp-action="UserList"> <i class="fa fa-list" aria-hidden="true"></i> Список пользователей</a>
+</div>
+    <div class="text-center">
+       
+                       
     @foreach (var role in Model)
     {
-        <tr>
-            <td>@role.Name</td>
-            <td>
+	<div class="input-group text-center ">
+                                     
+                                     <span>@role.Name </span>
+									 <form asp-action="Delete" asp-route-id="@role.Id" method="post">
+
+                                     <button type="submit" class="btn btn-danger">
+                                     <i class="fa fa-ban" aria-hidden="true"></i>
+                                     Удалить
+                                    </button>
+                                    </form>
+                                    
+
+	</div>
+       <!-- <div class="input-group text-center ">
+            <p>@role.Name</p>
+        </div> 
+
+        <div class="input-group text-center ">
                 <form asp-action="Delete" asp-route-id="@role.Id" method="post">
-                    <button type="submit">
+                    <button type="submit" class="btn btn-primary">
                         Удалить
                     </button>
-                </form>
-            </td>
-        </tr>
+                </form>    
+        </div> -->
     }
-</table>
-<a asp-action="Create">Добавить роль</a>
-<a asp-action="UserList">Список пользователей</a>
+</div>
+

@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 
 namespace ContestEACA.Models.ViewModels
 {
-    public class AdminSortViewModel
+    public class SFPSortViewModel
     {
         public SortState RatingSort { get; private set; } 
         public SortState DateSort { get; private set; }
+        public SortState NominationSort { get; private set; }
         public SortState Status { get; set; }
         public SortState Current { get; private set; } 
 
-        public AdminSortViewModel(SortState sortOrder)
+        public SFPSortViewModel(SortState sortOrder)
         {
             RatingSort = sortOrder == SortState.RatingAsc ? SortState.RatingDesc : SortState.RatingAsc;
             DateSort = sortOrder == SortState.DateCreateAsc ? SortState.DateCreateDesc : SortState.DateCreateAsc;
+            NominationSort = sortOrder == SortState.NominationAsc ? SortState.NominationDesc : SortState.NominationAsc;
 
             Current = sortOrder;
         }

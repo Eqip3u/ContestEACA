@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Изменить работу: @Model.Title</h2>
 
-<h4>ApplicationPost</h4>
+<h4>В номинации: @Model.Nomination.Name</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -41,8 +41,6 @@
                 <span asp-validation-for="LinkWork" class="text-danger"></span>
             </div>
 
-
-
             <div class="form-group">
                 <label asp-for="NominationId" class="control-label"></label>
                 <select asp-for="NominationId" class="form-control" asp-items="ViewBag.NominationId"></select>
@@ -50,47 +48,90 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default btn-danger" />
+                <input type="submit" value="Изменить" class="btn btn-default btn-danger" />
             </div>
         </form>
 
         <hr />
 
-        <form asp-action="ChangeFile" enctype="multipart/form-data">
-            <input type="hidden" asp-for="ID" />
-            <input type="hidden" asp-for="Rating" />
-            <input type="hidden" asp-for="DateCreated" />
-            <input type="hidden" asp-for="DateModified" />
-            <input type="hidden" asp-for="Title" />
-            <input type="hidden" asp-for="TextWork" />
-            <input type="hidden" asp-for="LinkWork" />
-            <input type="hidden" asp-for="NominationId" />
+        <div>
+            <a onclick="hidetxt('changeFile'); return false;" href="#" rel="nofollow">*Нажмите чтобы изменить файл работы.</a>
+            <div style="display:none;" id="changeFile">
+                <br />
+                <br />
+                <form asp-action="ChangeFile" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="ID" />
+                    <input type="hidden" asp-for="Rating" />
+                    <input type="hidden" asp-for="DateCreated" />
+                    <input type="hidden" asp-for="DateModified" />
+                    <input type="hidden" asp-for="Title" />
+                    <input type="hidden" asp-for="TextWork" />
+                    <input type="hidden" asp-for="LinkWork" />
+                    <input type="hidden" asp-for="NominationId" />
 
-            <div class="form-group">
-                <p>*Отдельная форма для изменения файла работы</p>
+                    <div class="form-group">
+                        <label class="control-label">Загрузить файл</label>
+                        <input type="file" name="uploadedFile" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Поменять файл работы" class="btn btn-default btn-danger" />
+                    </div>
+                </form>
+
             </div>
-
-            <div class="form-group">
-                <label class="control-label">Upload File</label>
-                <input type="file" name="uploadedFile" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="ChangeFile" class="btn btn-default btn-danger" />
-            </div>
-
-        </form>
+        </div>
 
         <hr />
 
+        <div>
+            <a onclick="hidetxt('changePhoto'); return false;" href="#" rel="nofollow">*Нажмите чтобы изменить обложку работы.</a>
+            <div style="display:none;" id="changePhoto">
+                <br />
+                <br />
+
+                <form asp-action="ChangePhoto" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="ID" />
+                    <input type="hidden" asp-for="Rating" />
+                    <input type="hidden" asp-for="DateCreated" />
+                    <input type="hidden" asp-for="DateModified" />
+                    <input type="hidden" asp-for="Title" />
+                    <input type="hidden" asp-for="TextWork" />
+                    <input type="hidden" asp-for="LinkWork" />
+                    <input type="hidden" asp-for="NominationId" />
+
+                    <div class="form-group">
+                        <label class="control-label">Загрузить обложку</label>
+                        <input type="file" name="uploadedFile" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Поменять обложку работы" class="btn btn-default btn-danger" />
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <hr />
 
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="MemberPanel" asp-action="Index">Вернуться к своим работам</a>
 </div>
-
+<script>
+    var show;
+    function hidetxt(type) {
+        param = document.getElementById(type);
+        if (param.style.display == "none") {
+            if (show) show.style.display = "none";
+            param.style.display = "block";
+            show = param;
+        } else param.style.display = "none"
+    }
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

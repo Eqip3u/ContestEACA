@@ -12,7 +12,7 @@
 
 @if (!User.Identity.IsAuthenticated)
 {
-    <hr />
+   
 
     <p>
         Для оценивания работ
@@ -21,7 +21,7 @@
         <a asp-area="" asp-controller="Account" asp-action="Login">войдите на сайт</a>
     </p>
         
-    <hr />
+    
 }
 
 
@@ -30,10 +30,11 @@
         <div class="form-inline form-group">
             <div class="col-xs-9 col-sm-4">
 
-                <label class="control-label">@Html.DisplayNameFor(x => x.Nominations) </label>
+                <label class="control-label nomination">@Html.DisplayNameFor(x => x.Nominations) </label>
+                
                 @Html.DropDownList("nomination", Model.Nominations as SelectList, htmlAttributes: new { @class = "form-control" })
 
-                <input type="submit" value="Filter" class="btn btn-default" />
+                <button type="submit" value="Filter" class="btn btn-primary addjob" > Фильтровать </button>
 
             </div>
         </div>
@@ -47,13 +48,6 @@
     }
 </div>
 
-<style>
-    .post {
-        border-color: green;
-        height: 250px;
-        margin: auto;
-    }
-</style>
 
 
 

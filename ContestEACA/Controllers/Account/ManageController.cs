@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using ContestEACA.Models;
 using ContestEACA.Models.ManageViewModels;
 using ContestEACA.Services;
+using ContestEACA.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContestEACA.Controllers
 {
@@ -20,6 +22,7 @@ namespace ContestEACA.Controllers
     [Route("[controller]/[action]")]
     public class ManageController : Controller
     {
+        private readonly ApplicationContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -29,12 +32,14 @@ namespace ContestEACA.Controllers
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
         public ManageController(
+          ApplicationContext context,
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -58,7 +63,6 @@ namespace ContestEACA.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage
@@ -80,16 +84,6 @@ namespace ContestEACA.Controllers
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var email = user.Email;
-            if (model.Email != email)
-            {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
-                if (!setEmailResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
-                }
             }
 
             var phoneNumber = user.PhoneNumber;
@@ -146,6 +140,30 @@ namespace ContestEACA.Controllers
                 Email = user.Email,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage
+            };
+
+            return View(viewmodel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ModerateWork(ModerateWorkViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            ModerateWorkViewModel viewmodel = new ModerateWorkViewModel()
+            {
+                Posts = _context.Posts
+                            .Include(x => x.Contest)
+                            .Include(x => x.Nomination)
+                            .Where(x => x.Status == StatusPost.AwaitingForModeration)
             };
 
             return View(viewmodel);

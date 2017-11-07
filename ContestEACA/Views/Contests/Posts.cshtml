@@ -1,0 +1,51 @@
+﻿@model ContestEACA.Models.ViewModels.PostsViewModel
+
+@{
+    ViewData["Title"] = "Посты для конкурса";
+}
+
+<h2 class="center-row title">Работы на конкурс "@ViewBag.ContestName"</h2>
+
+
+@await Html.PartialAsync("_ConfirmedEmail")
+
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <p class="title-info">
+        Для оценивания работ &nbsp;
+        <a asp-area="" asp-controller="Account" asp-action="Register">зарегистрируйтесь </a>
+        &nbsp;  или &nbsp;
+        <a asp-area="" asp-controller="Account" asp-action="Login"> войдите на сайт </a>
+    </p>
+}
+
+
+<div class="row center_row">
+    <form method="get">
+
+        <div style="margin-top:1em;" class="row">
+            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1  nomination">
+                <p> @Html.DisplayNameFor(x => x.Nominations): &nbsp;</p>
+            </div>
+
+            <div class="col-xs-3 col-md-3 select_list">
+                @Html.DropDownList("nomination", Model.Nominations as SelectList, htmlAttributes: new { @class = "form-control" })
+            </div>
+
+            <div class="col-xs-2 col-md-3">
+                <input type="submit" value="Фильтровать" class="btn btn-primary select_butn" />
+
+            </div>
+            @*<div class="col-xs-7 addjob">
+                <a asp-action="CreatePostInContest" asp-controller="Contests" asp-route-id="@ViewBag.ContestId">&nbsp;Добавить работу</a>
+            </div>*@
+        </div>
+    </form>
+    @foreach (var item in Model.Posts.OrderByDescending(x => x.Rating))
+    {
+        @await Html.PartialAsync("_PartialPost", item);
+    }
+</div>
+
+

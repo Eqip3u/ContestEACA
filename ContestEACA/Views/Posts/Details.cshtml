@@ -2,24 +2,38 @@
 
 @{
     ViewData["Title"] = "Details";
+
+    string fileExtension = "";
+
+    @if (ViewBag.FileEnable)
+    {
+        var index = Model.File.Path.LastIndexOf('.') + 1;
+
+        for (int i = index; i < Model.File.Path.Length; i++)
+        {
+            fileExtension += Model.File.Path[i];
+        }
+    }
+
 }
 <script id="dsq-count-scr" src="//san2blog.disqus.com/count.js" async></script>
 
 <div class="container">
     <div class="row">
-        <div class=" col-sm-4"> 
+        <div class=" col-sm-4">
             <h1>@Html.DisplayFor(model => model.Title)</h1>
             <h2>@Html.DisplayFor(model => model.Author.FirstName) @Html.DisplayFor(model => model.Author.LastName)</h2>
         </div>
         <div class=" col-sm-4">
-            <h1> Рейтинг: @Html.DisplayFor(model => model.Rating) <a href="#" >Нравится</a> </h1>
+            <h1> Рейтинг: @Html.DisplayFor(model => model.Rating) <a href="#">Нравится</a> </h1>
             <h2> Номинация: @Html.DisplayFor(model => model.Nomination.Name) </h2>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4"> 
-        <h1>@Html.DisplayNameFor(model => model.TextWork) </h1>
-        <p>@Html.DisplayFor(model => model.TextWork)</p></div>
+        <div class="col-sm-4">
+            <h1>@Html.DisplayNameFor(model => model.TextWork) </h1>
+            <p>@Html.DisplayFor(model => model.TextWork)</p>
+        </div>
 
         <div class="col-sm-8">
             <div>
@@ -27,18 +41,20 @@
                 @if(ViewBag.LinkEnable)
                 {
                 <div class="vid">
+                    
                     <iframe width="560" height="315" src="//www.youtube.com/embed/@ViewBag.ParsURL" allowfullscreen=""></iframe>
                 </div>
                 }
                 else
                 {
-                    <p>Участник не выложил никакого видео</p>
+                <p>Участник не выложил никакого видео</p>
                 }
 
                 <br />
 
                 @if (ViewBag.FileEnable)
                 {
+                    <p>@fileExtension</p>
                     <a href="@Url.Content(ViewBag.FilePath)"> Посмотреть конкурсную работу </a>
                 }
                 else
@@ -51,16 +67,15 @@
 </div>
 
 <div id="disqus_thread"></div>
-    
+
 <script>
 
-    (function()
-        {
-            var d = document, s = d.createElement('script');
-            s.src = 'https://contesteaca.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        }
+    (function () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://contesteaca.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    }
     )();
 
 </script>
