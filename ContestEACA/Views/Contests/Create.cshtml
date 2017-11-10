@@ -4,71 +4,72 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Создание конкурса</h2>
-
-<h4>Конкурс</h4>
+<h2 class="title-center text-center">Создание конкурса</h2>
 
 <hr />
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create"  enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartTime" class="control-label"></label>
+                    <input asp-for="StartTime" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="EndTime" class="control-label"></label>
+                    <input asp-for="EndTime" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Rewarding" class="control-label"></label>
+                    <input asp-for="Rewarding" class="form-control" />
+                    <span asp-validation-for="Rewarding" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="PreTitle" class="control-label"></label>
+                    <input asp-for="PreTitle" class="form-control" />
+                    <span asp-validation-for="PreTitle" class="text-danger"></span>
+               </div>
 
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
-            </div>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Rewarding" class="control-label"></label>
-                <input asp-for="Rewarding" class="form-control" />
-                <span asp-validation-for="Rewarding" class="text-danger"></span>
-            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PreText" class="control-label"></label>
+                    <textarea asp-for="PreText" class="form-control"> </textarea>
+                    <span asp-validation-for="PreText" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Загрузить картинку</label>
+                    <input type="file"  title="Выбрать файл" name="uploadPhoto" class="btn" /><br>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Загрузить положение о конкурсе</label>
+                    <input type="file"  title="Выбрать файл" name="uploadProvision" class="btn" /><br>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="PreTitle" class="control-label"></label>
-                <input asp-for="PreTitle" class="form-control" />
-                <span asp-validation-for="PreTitle" class="text-danger"></span>
             </div>
-
-            <div class="form-group">
-                <label asp-for="PreText" class="control-label"></label>
-                <input asp-for="PreText" class="form-control" />
-                <span asp-validation-for="PreText" class="text-danger"></span>
+            <div class="col-md-12">
+                <div class="form-group text-center">
+                    <input type="submit" value="Создать" class="btn btn-primary  btn-block"  />
+                    <div>
+                        <a asp-action="Index">Вернуться назад</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label class="control-label">Загрузить картинку</label>
-                <input type="file"  name="uploadPhoto" class="form-control" /><br>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Загрузить положение о конкурсе</label>
-                <input type="file" name="uploadProvision" class="form-control" /><br>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Создать" class="btn btn-default" />
-            </div>
-        </form>
+</form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Вернуться назад</a>
-</div>
+
 

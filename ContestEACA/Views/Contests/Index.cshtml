@@ -10,9 +10,6 @@
     string image;
 }
 
-
-
-
 <div id="fullpage">
 
     <section id="info" data-anchor="info" class="section">
@@ -34,7 +31,7 @@
              </div>
     </section>
 
-    @foreach (var item in Model.Where(x => x.Status == StatusContest.Active))
+    @foreach (var item in Model.Where(x => x.Status == StatusContest.Active || x.Status == StatusContest.Coming).OrderBy(x => x.EndTime))
     {
         if(item.PreImage != null)
         {
@@ -45,12 +42,10 @@
             image = "0";
         }
 
-        <section style="background-image:@image;
-        "
-
+        <section style="background-image:@image;"
                  data-anchor="section_@FPSec"
-                 class="section active background"
-                 id="section active">
+                 class="section background"
+                 id="section">
 
                 @await Html.PartialAsync("_PartialContest", item)
 
@@ -61,51 +56,15 @@
 
     }
 
-    @foreach (var item in Model.Where(x => x.Status == StatusContest.Coming))
-    {
-        if (item.PreImage != null)
-        {
-            image = "url(" + item.PreImage.Path + ")";
-        }
-        else
-        {
-            image = "0";
-        }
-        <section style="background-image:@image;
-                         "
-                 data-anchor="section_@FPSec"
-                 class="section coming background"
-                 id="section coming">
+    <section id="archiveContests" data-anchor="archiveContests" class="section">
+        <div class="container center-block">
 
-            @await Html.PartialAsync("_PartialContest", item)
+            <h2 class="text-center">
+                <a class="btn btn-danger" asp-action="ArchiveContests">Архив конкурсов</a>
+            </h2>
 
-        </section>
-
-        FPSec++;
-    }
-
-    @foreach (var item in Model.Where(x => x.Status == StatusContest.Done))
-    {
-        if (item.PreImage != null)
-        {
-            image = "url(" + item.PreImage.Path + ")";
-        }
-        else
-        {
-            image = "0";
-        }
-        <section style="background-image:@image;
-                       "
-                 data-anchor="section_@FPSec"
-                 class="section done background"
-                 id="section done">
-
-            @await Html.PartialAsync("_PartialContest", item)
-
-        </section>
-
-        FPSec++;
-    }
+        </div>
+    </section>
 
 </div>
 

@@ -4,26 +4,6 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Работы участников</h2>
-
-
-@await Html.PartialAsync("_ConfirmedEmail")
-
-
-@if (!User.Identity.IsAuthenticated)
-{
-   
-
-    <p>
-        Для оценивания работ
-        <a asp-area="" asp-controller="Account" asp-action="Register">зарегистрируйтесь</a>
-        или
-        <a asp-area="" asp-controller="Account" asp-action="Login">войдите на сайт</a>
-    </p>
-        
-    
-}
-
 
 <form method="get">
     <div class="row">

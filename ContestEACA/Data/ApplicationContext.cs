@@ -23,6 +23,8 @@ namespace ContestEACA.Data
 
         public DbSet<Nomination> Nominations { get; set; }
 
+        public DbSet<ModerateUserContest> ModerateUsersContests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {     
             base.OnModelCreating(builder);

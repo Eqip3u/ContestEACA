@@ -5,64 +5,32 @@
     ViewData["Title"] = Model.Name;
     var user = await UserManager.GetUserAsync(User);
 }
-<h2>Подробно о конкурсе</h2>
-
+<h2 class="title-center text-center hidden-xs"  >Подробно о конкурсе</h2>
+<h2 class="title-center text-center hidden-md hidden-sm hidden-lg">@Html.DisplayNameFor(model => model.Name) "@Html.DisplayFor(model => model.Name)"</h2>
 <div>
-    <h4>Конкурс</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+    <div class="text-center">
+        <img style="width:100px; height:100px;" src="@Model.PreImage.Path" class="img-circle">
+    </div>
+    <h3 class=" text-center hidden-xs"> @Html.DisplayNameFor(model => model.Name) "@Html.DisplayFor(model => model.Name)" </h3>
+    <h4 class=" text-center">@Html.DisplayFor(model => model.PreTitle)</h4>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
+    @if (user != null)
+    {
+        @if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
+        {
+            <div class="text-center center-row">
+                <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a>
+            </div>
+            <hr />
+        }
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Rewarding)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Rewarding)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PreTitle)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PreTitle)
-        </dd>
+    <div col-md-12>@Html.DisplayFor(model => model.PreText) </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PreText)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PreText)
-        </dd>
+    <div class=" text-center">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PreImageId)
-        </dt>
-        <dd>
-            <img style="width:50px; height:50px;" src="@Model.PreImage.Path" />
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ProvisionId)
-        </dt>
-        <dd>
+        
             @if (Model.Provision != null)
             {
                 <a href="@Url.Content(Model.Provision.Path)"> Посмотреть положение о конкурсе </a>
@@ -71,17 +39,33 @@
             {
                 <p>Положения о конкурсе пока нет</p>
             }
-        </dd>
-    </dl>
-</div>
+     </div>
 
-@if (user != null)
-{
-    @if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
-    {
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a>
-        </div>
-    }
-}
+
+    </div>
+    <div class="col-md-offset-9 col-md-3">
+
+        <dl class="dl-horizontal text-right">
+            <dt class=" text-right">
+                @Html.DisplayNameFor(model => model.StartTime):
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.StartTime)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.EndTime):
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EndTime)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Rewarding):
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Rewarding)
+            </dd>
+
+        </dl>
+</div>
+    </div>
 

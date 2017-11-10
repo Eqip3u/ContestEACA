@@ -81,6 +81,10 @@ namespace ContestEACA.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<DateTime>("DateModified");
+
                     b.Property<DateTime>("EndTime");
 
                     b.Property<bool>("MainContest");
@@ -102,11 +106,19 @@ namespace ContestEACA.Migrations
 
                     b.Property<DateTime>("StartTime");
 
+                    b.Property<string>("WhoCreatedId");
+
+                    b.Property<string>("WhoModifiedId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PreImageId");
 
                     b.HasIndex("ProvisionId");
+
+                    b.HasIndex("WhoCreatedId");
+
+                    b.HasIndex("WhoModifiedId");
 
                     b.ToTable("Contests");
                 });
@@ -139,6 +151,24 @@ namespace ContestEACA.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("ContestEACA.Models.ModerateUserContest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContestId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ModerateUsersContests");
                 });
 
             modelBuilder.Entity("ContestEACA.Models.Nomination", b =>
@@ -320,6 +350,14 @@ namespace ContestEACA.Migrations
                     b.HasOne("ContestEACA.Models.FileModel", "Provision")
                         .WithMany()
                         .HasForeignKey("ProvisionId");
+
+                    b.HasOne("ContestEACA.Models.ApplicationUser", "WhoCreated")
+                        .WithMany()
+                        .HasForeignKey("WhoCreatedId");
+
+                    b.HasOne("ContestEACA.Models.ApplicationUser", "WhoModified")
+                        .WithMany()
+                        .HasForeignKey("WhoModifiedId");
                 });
 
             modelBuilder.Entity("ContestEACA.Models.Like", b =>
@@ -328,6 +366,18 @@ namespace ContestEACA.Migrations
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ContestEACA.Models.ModerateUserContest", b =>
+                {
+                    b.HasOne("ContestEACA.Models.Contest", "Contest")
+                        .WithMany("Moderators")
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ContestEACA.Models.ApplicationUser", "User")
+                        .WithMany("ContestModerate")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ContestEACA.Models.Nomination", b =>

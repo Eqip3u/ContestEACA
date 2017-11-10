@@ -1,5 +1,4 @@
-﻿@model ContestEACA.Models.Post
-
+﻿@model ContestEACA.Models.Post;
 @{
     ViewData["Title"] = "Details";
 
@@ -18,68 +17,84 @@
 }
 <script id="dsq-count-scr" src="//san2blog.disqus.com/count.js" async></script>
 
-<div class="container">
-    <div class="row">
-        <div class=" col-sm-4">
-            <h1>@Html.DisplayFor(model => model.Title)</h1>
-            <h2>@Html.DisplayFor(model => model.Author.FirstName) @Html.DisplayFor(model => model.Author.LastName)</h2>
-        </div>
-        <div class=" col-sm-4">
-            <h1> Рейтинг: @Html.DisplayFor(model => model.Rating) <a href="#">Нравится</a> </h1>
-            <h2> Номинация: @Html.DisplayFor(model => model.Nomination.Name) </h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <h1>@Html.DisplayNameFor(model => model.TextWork) </h1>
-            <p>@Html.DisplayFor(model => model.TextWork)</p>
-        </div>
 
-        <div class="col-sm-8">
-            <div>
 
-                @if(ViewBag.LinkEnable)
-                {
-                <div class="vid">
-                    
-                    <iframe width="560" height="315" src="//www.youtube.com/embed/@ViewBag.ParsURL" allowfullscreen=""></iframe>
-                </div>
-                }
-                else
-                {
-                <p>Участник не выложил никакого видео</p>
-                }
+<h2 class="text-center title-center hidden-xs" >Работа на конкурс</h2>
 
-                <br />
 
-                @if (ViewBag.FileEnable)
-                {
-                    <p>@fileExtension</p>
-                    <a href="@Url.Content(ViewBag.FilePath)"> Посмотреть конкурсную работу </a>
-                }
-                else
-                {
-                    <p>Участник не выложил никаких файлов</p>
-                }
-            </div>
-        </div>
-    </div>
+
+<div class="col-sm-3 title-center text-center">
+
+    <h2>@Html.DisplayFor(model => model.Title)</h2>
+
 </div>
 
-<div id="disqus_thread"></div>
+<div class="col-sm-offset-5 col-sm-4">
+    <h4> Номинация: @Html.DisplayFor(model => model.Nomination.Name) </h4>
+    <h4 class="author_details">Автор: @Html.DisplayFor(model => model.Author.FirstName) @Html.DisplayFor(model => model.Author.LastName)</h4>
+</div>
 
-<script>
 
-    (function () {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://contesteaca.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
+<div style="padding-bottom:5%;" class="col-md-12">
+    @Html.DisplayFor(model => model.TextWork)
+</div>
+
+<div class="col-md-12 ">
+
+    @if (ViewBag.LinkEnable)
+    {
+        <div class="embed-responsive embed-responsive-16by9">
+
+            <iframe class="embed-responsive-item image_post" src="//www.youtube.com/embed/@ViewBag.ParsURL" allowfullscreen=""></iframe>
+        </div>
     }
-    )();
+    else
+    {
 
-</script>
+    }
 
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-<script id="dsq-count-scr" src="//contesteaca.disqus.com/count.js" async></script>
+
+    @if (ViewBag.FileEnable)
+    {
+        <a href="@Url.Content(ViewBag.FilePath)">
+            <img src="@Url.Content(ViewBag.FilePath)" class="img-responsive col-md-12 nopadding image_post" style=" align-items:center;" alt="конкурсная работа">
+            <p style="visibility:hidden;">@fileExtension</p>
+        </a>
+
+
+
+    }
+    else
+    {
+
+    }
+
+
+
+
+    <h4> Рейтинг: @Html.DisplayFor(model => model.Rating) <a href="#">Нравится</a> </h4>
+
+
+
+    <script type="text/javascript">
+
+                document.write(VK.Share.button
+                    ({
+                        url: 'http://contesteaca.azurewebsites.net/Posts/Details/ @Model.ID',
+                        title: ' @Model.Title  Автор:  @Model.Author.FirstName @Model.Author.LastName  ',
+                        text: ' Автор:  @Model.Author.FirstName @Model.Author.LastName  ',
+                        @*image: ' http://contesteaca.azurewebsites.net/ @Model.Cover.Path'*@ 
+
+                    },
+                    {
+                        type: "button",
+                        text: "Поделиться"
+                    }
+                    ));
+    </script>
+
+
+
+
+

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ContestEACA.Models.Contest>
+
+@{
+    ViewData["Title"] = "Архив конкурсов";
+}
+
+<h2>Прошедшие конкурсы</h2>
+
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Название конкурса
+            </th>
+            <th>
+                Расширения
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    <a asp-action="ArchiveContestWorks" asp-route-contestId="@item.Id">Работы участников</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -19,15 +19,18 @@
                     <a asp-area="" asp-controller="MemberPanel" asp-action="Index">Мои работы</a>
                 </li>
             }
-        }
+            if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "moderator").Result)
+            {
 
-        @if (user != null)
-        {
+                <li>
+                    <a asp-area="" asp-controller="Moderate" asp-action="Index">Модерация конкурсов</a>
+                </li>
+            }
             if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
             {
-            <li>
-                <a asp-area="" asp-controller="AdminPanel" asp-action="Index">Панель администрирования</a>
-            </li>
+                <li>
+                    <a asp-area="" asp-controller="AdminPanel" asp-action="ContestList">Панель администрирования</a>
+                </li>
             }
         }
     }

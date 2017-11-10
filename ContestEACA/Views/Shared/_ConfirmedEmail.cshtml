@@ -9,7 +9,7 @@
     <hr />
     if (await UserManager.IsEmailConfirmedAsync(user))
     {
-        <p class="text-center">
+        <p class="">
             <a asp-action="CreatePostInContest" asp-controller="Contests" asp-route-id="@ViewBag.ContestId" class="btn btn-primary">Добавить работу</a>
         </p>
     }

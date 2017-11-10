@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ContestEACA.Models.Contest>
+
+@{
+    ViewData["Title"] = "Панель администратора";
+}
+<br />
+<br />
+<br />
+<h2>Список всех активных конкурсов</h2>
+
+<hr />
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Название конкурса
+            </th>
+            <th>
+                Инструменты
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            int countAwaitingModeration = item.Posts.Where(x => x.Status == StatusPost.AwaitingForModeration).Count();
+
+            <tr>
+                <td class="col-md-3">
+                    @item.Name
+                </td>
+                <td class="col-md-9">
+                    <a asp-controller="Contests" asp-action="Details" asp-route-id="@item.Id">Страница конкурса</a> |
+                    <a asp-controller="Contests" asp-action="Edit" asp-route-id="@item.Id">Изменить страницу конкурса</a>
+                    <br />
+                    <br />
+                    <a asp-action="Index" asp-route-contestId="@item.Id">
+                        Список работ
+                    </a>
+                    @if (countAwaitingModeration > 0)
+                    {
+                        <small>(Требующих модерации: <span class="badge">@countAwaitingModeration</span>)</small>
+                    }
+                    <br />
+                    <br />
+                    <a asp-controller="Contests" asp-action="AssignmentModerators" asp-route-contestId="@item.Id">Назначить модераторов</a> |
+                    <a asp-controller="Report" asp-action="Index" asp-route-contest="@item.Id">Создать отчёт</a> |
+                    <a asp-controller="Contests" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

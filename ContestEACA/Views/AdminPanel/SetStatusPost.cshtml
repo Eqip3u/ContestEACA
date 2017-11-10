@@ -5,12 +5,12 @@
     ViewData["Title"] = "SetStatusPost";
 }
 
-<h2>Изменение ролей для работы: @Model.Post.Title</h2>
+<h2 class="title-center text-center">Изменение статуса работы: @Model.Post.Title</h2>
 
-<form asp-action="SetStatusPost" method="post">
-    <div class="form-group">
+<form  class="text-center" asp-action="SetStatusPost" method="post">
+    <div class="form-group" >
         <label asp-for="Status">Статус поста</label>
-        <select asp-for="Status" asp-items="Html.GetEnumSelectList<StatusPost>()"></select>
+        <select class="btn btn-group-vertical dropdown-toggle  "asp-for="Status" asp-items="Html.GetEnumSelectList<StatusPost >()"></select>
     </div>
     <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>

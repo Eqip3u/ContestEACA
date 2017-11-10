@@ -1,4 +1,4 @@
-﻿@model ContestEACA.Models.ViewModels.SFPIndexViewModel
+﻿@model ContestEACA.Models.ViewModels.ContestIndexViewModel
 
 @inject UserManager<ApplicationUser> UserManager
 
@@ -21,7 +21,7 @@
     if (await UserManager.IsEmailConfirmedAsync(user))
     {
         <p style="font: 18px Roboto" class="jumbotron  text-center">
-            Для добавления работ перейдите на страницу конкурсов -> выберите конкурс -> Работы участников -> Добавить работу
+            Для добавления работ перейдите на страницу конкурсов -> Выберите конкурс -> Работы участников -> Добавить работу
         </p>
     }
     else
@@ -38,7 +38,7 @@
 else
 {
 
-    <h2  class="text-center" > Ваши работы: </h2>
+    <h2  class="text-center title-center" > Ваши работы </h2>
 
     <div class="row center_row">
     <blockquote class="blockquote">

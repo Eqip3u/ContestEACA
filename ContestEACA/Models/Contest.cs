@@ -56,6 +56,29 @@ namespace ContestEACA.Models
         public int? PreImageId { get; set; }
         public virtual FileModel PreImage { get; set; }
 
+
+        [Display(Name = "Дата создания")]
+        public DateTime DateCreated { get; set; }
+
+        [Display(Name = "Дата изменения")]
+        public DateTime DateModified { get; set; }
+
+
+        [Display(Name = "Кто создал")]
+        public string WhoCreatedId { get; set; }
+        public ApplicationUser WhoCreated { get; set; }
+
+        [Display(Name = "Кто внёс последнее изменение")]
+        public string WhoModifiedId { get; set; }
+        public ApplicationUser WhoModified { get; set; }
+
+
+
+        [Display(Name = "Модераторы")]
+        public virtual ICollection<ModerateUserContest> Moderators { get; set; }
+
+
+
         [Display(Name = "Работы")]
         public virtual ICollection<Post> Posts { get; set; }
 

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ContestEACA.Models.Nomination>
+
+@{
+    ViewData["Title"] = "Номинации";
+}
+
+<h2 class="title-center text-center">Список всех номинации для конкурса: "@ViewBag.ContestName"</h2>
+
+
+<p>
+    <a class="btn btn-info" asp-controller="Nominations" asp-route-contestId="@ViewBag.ContestId" asp-action="Create">Создать новую номинацию</a>
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Инструменты
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-md-2">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="col-md-8">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td class="col-md-2">
+                    <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                    <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

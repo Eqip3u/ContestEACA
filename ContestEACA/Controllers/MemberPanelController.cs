@@ -26,7 +26,7 @@ namespace ContestEACA.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(int? contest, int page = 1, SortState sortOrder = SortState.Status)
+        public async Task<IActionResult> Index(int? contest, int page = 1, ContestSortState sortOrder = ContestSortState.Status)
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);
 
@@ -49,25 +49,25 @@ namespace ContestEACA.Controllers
             //Сортировка
             switch (sortOrder)
             {
-                case SortState.RatingAsc:
+                case ContestSortState.RatingAsc:
                     posts = posts.OrderBy(x => x.Rating);
                     break;
-                case SortState.RatingDesc:
+                case ContestSortState.RatingDesc:
                     posts = posts.OrderByDescending(x => x.Rating);
                     break;
-                case SortState.DateCreateAsc:
+                case ContestSortState.DateCreateAsc:
                     posts = posts.OrderBy(x => x.DateCreated);
                     break;
-                case SortState.DateCreateDesc:
+                case ContestSortState.DateCreateDesc:
                     posts = posts.OrderByDescending(x => x.DateCreated);
                     break;
-                case SortState.NominationAsc:
+                case ContestSortState.NominationAsc:
                     posts = posts.OrderBy(x => x.Nomination.Name);
                     break;
-                case SortState.NominationDesc:
+                case ContestSortState.NominationDesc:
                     posts = posts.OrderByDescending(x => x.Nomination.Name);
                     break;
-                case SortState.Status:
+                case ContestSortState.Status:
                     posts = posts.OrderBy(x => x.Status);
                     break;
                 default:
@@ -80,11 +80,11 @@ namespace ContestEACA.Controllers
             var items = await posts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
 
-            SFPIndexViewModel viewModel = new SFPIndexViewModel()
+            ContestIndexViewModel viewModel = new ContestIndexViewModel()
             {
-                PageViewModel = new SFPPageViewModel(count, page, pageSize),
-                SortViewModel = new SFPSortViewModel(sortOrder),
-                FilterViewModel = new SFPFilterViewModel(_context.Contests.ToList(), contest),
+                PageViewModel = new ContestPageViewModel(count, page, pageSize),
+                SortViewModel = new ContestSortViewModel(sortOrder),
+                FilterViewModel = new ContestFilterViewModel(_context.Contests.ToList(), contest),
                 Posts = items,
                 HelpNamePost = items.FirstOrDefault()
             };

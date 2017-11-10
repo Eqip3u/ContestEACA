@@ -15,7 +15,9 @@ $(document).ready(function () {
 
      
     $('#fullpage').fullpage({
-        navigation: false,
+
+        navigation: true,
+        css3: true,
         afterLoad: function (anchorLink, index) {
             var loadedSection = $(this);
         }

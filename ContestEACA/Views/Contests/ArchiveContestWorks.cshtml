@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ContestEACA.Models.Post>
+
+@{
+    ViewData["Title"] = "ArchiveContestWorks";
+}
+
+<h2>ArchiveContestWorks</h2>
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Номинация
+            </th>
+            <th>
+                Название работы
+            </th>
+            <th>
+                Автор
+            </th>
+            <th>
+                Рейтинг
+            </th>
+            <th>
+                Расширения
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Nomination.Name
+                </td>
+                <td>
+                    @item.Title
+                </td>
+                <td>
+                    @item.Author.FirstName
+                    @item.Author.LastName
+                </td>
+                <td>
+                    @item.Rating
+                </td>
+                <td>
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.ID">Подробно о работе</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

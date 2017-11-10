@@ -10,6 +10,7 @@ using ContestEACA.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using ContestEACA.Services;
 using ContestEACA.Models.ManageViewModels;
+using ContestEACA.Models.ViewModels.PostsFSPViewModels;
 
 namespace ContestEACA.Controllers
 {
@@ -33,49 +34,41 @@ namespace ContestEACA.Controllers
 
 
         // GET: AdminPanel
-        public async Task<IActionResult> Index(int? contest, int page = 1, SortState sortOrder = SortState.Status)
+        public async Task<IActionResult> Index(
+            int? contestId,
+            int? nominationId,
+            int page = 1,
+            PostsSortState sortOrder = PostsSortState.RatingDesc)
         {
 
             int pageSize = 10;
 
-
             IQueryable<Post> posts = _context.Posts
+                .Where(x => x.ContestId == contestId)
                 .Include(x => x.Author)
                 .Include(x => x.Likes)
                 .Include(x => x.Nomination);
 
             //Фильтрация
-            if (contest != null && contest != 0)
+            if (nominationId != null && nominationId != 0)
             {
-                posts = posts.Where(x => x.ContestId == contest);
+                posts = posts.Where(x => x.NominationId == nominationId);
             }
 
             //Сортировка
             switch (sortOrder)
             {
-                case SortState.RatingAsc:
+                case PostsSortState.RatingAsc:
                     posts = posts.OrderBy(x => x.Rating);
                     break;
-                case SortState.RatingDesc:
+                case PostsSortState.RatingDesc:
                     posts = posts.OrderByDescending(x => x.Rating);
                     break;
-                case SortState.DateCreateAsc:
-                    posts = posts.OrderBy(x => x.DateCreated);
+                case PostsSortState.NameAsc:
+                    posts = posts.OrderBy(x => x.Title);
                     break;
-                case SortState.DateCreateDesc:
-                    posts = posts.OrderByDescending(x => x.DateCreated);
-                    break;
-                case SortState.NominationAsc:
-                    posts = posts.OrderBy(x => x.Nomination.Name);
-                    break;
-                case SortState.NominationDesc:
-                    posts = posts.OrderByDescending(x => x.Nomination.Name);
-                    break;
-                case SortState.Status:
-                    posts = posts.OrderBy(x => x.Status);
-                    break;
-                default:
-                    posts = posts.OrderBy(x => x.Status);
+                case PostsSortState.NameDesc:
+                    posts = posts.OrderByDescending(x => x.Title);
                     break;
             }
 
@@ -84,18 +77,32 @@ namespace ContestEACA.Controllers
             var items = await posts.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
 
-            SFPIndexViewModel viewModel = new SFPIndexViewModel()
+            PostsIndexViewModel viewModel = new PostsIndexViewModel()
             {
-                PageViewModel = new SFPPageViewModel(count, page, pageSize),
-                SortViewModel = new SFPSortViewModel(sortOrder),
-                FilterViewModel = new SFPFilterViewModel(_context.Contests.ToList(), contest),
+                PageViewModel = new PostsPageViewModel(count, page, pageSize),
+                SortViewModel = new PostsSortViewModel(sortOrder),
+                FilterViewModel = new PostFilterViewModel(_context.Nominations.Where(x => x.ContestId == contestId).ToList(), nominationId),
                 Posts = items,
-                HelpNamePost = items.FirstOrDefault()
+                HelpNamePost = new Post()
             };
+
+            ViewBag.ContestId = contestId;
+            ViewBag.ContestName =  _context.Contests.FirstOrDefaultAsync(x => x.Id == contestId).Result.Name;
 
             return View(viewModel);
         }
 
+        public async Task<IActionResult> ContestList()
+        {
+            var contests = await _context.Contests
+                .Include(x => x.Nominations)
+                .Include(x => x.Posts)
+                .Where(x => x.Status == StatusContest.Active || x.Status == StatusContest.Coming)
+                .OrderBy(x => x.EndTime)
+                .ToListAsync();
+
+            return View(contests);
+        }
         [HttpGet]
         public async Task<IActionResult> UserDetails(string userId)
         {

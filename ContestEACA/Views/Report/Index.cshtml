@@ -1,0 +1,64 @@
+﻿@model ContestEACA.Models.ViewModels.AdminPanelViewModels.ReportViewModel
+
+@{
+    ViewBag.Title = "Генератор отчётов";
+}
+
+<h2>Каталог пользователей</h2>
+
+<form method="get">
+    <div class="form-inline form-group">
+
+        <label class="control-label">Конкурс: </label>
+        @Html.DropDownList("contest", Model.Contests as SelectList, htmlAttributes: new { @class = "form-control" })
+
+        <label class="control-label">Номинация: </label>
+        @Html.TextBox("nomination", Model.Nomination, htmlAttributes: new { @class = "form-control" })
+
+        <input type="submit" value="Фильтр" class="btn btn-info" />
+    </div>
+</form>
+
+<table id="ReportTable" class="table table-striped">
+    <tr >
+        <th>Конкурс</th>
+        <th>Номинация</th>
+        <th>ФИО</th>
+    </tr>
+
+    @foreach (var item in Model.Posts)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contest.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nomination.Name)
+            </td>
+            <td>
+                <p>@Html.DisplayFor(modelItem => item.Author.FirstName) @Html.DisplayFor(modelItem => item.Author.LastName)</p>
+            </td>
+        </tr>
+    }
+</table>
+
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Создать отчёт
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a id="ExcelReport" href="#">Excel</a></li>
+    </ul>
+</div>
+
+<script src="~/js/xlsx.core.min.js"></script>
+<script src="~/js/FileSaver.min.js"></script>
+<script src="~/js/tableExport.min.js"></script>
+
+<script>
+    $("#ExcelReport").click(function () {
+        $("#ReportTable").tableExport({ type: 'excel'});
+    });
+</script>
+

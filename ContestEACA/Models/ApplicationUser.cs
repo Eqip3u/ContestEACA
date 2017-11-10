@@ -13,5 +13,7 @@ namespace ContestEACA.Models
         public string LastName { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
+
+        public virtual ICollection<ModerateUserContest> ContestModerate { get; set; }
     }
 }

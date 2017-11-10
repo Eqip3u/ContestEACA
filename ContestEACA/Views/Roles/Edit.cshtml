@@ -2,17 +2,19 @@
 @using Microsoft.AspNetCore.Identity
 @model ContestEACA.Models.ViewModels.ChangeRoleViewModel
 
-<h2>Изменение ролей для пользователя @Model.UserEmail</h2>
-
-<form asp-action="Edit" method="post">
-    <input type="hidden" name="userId" value="@Model.UserId" />
-    <div class="form-group">
-        @foreach (IdentityRole role in Model.AllRoles)
-        {
-            <input type="checkbox" name="roles" value="@role.Name"
-                   @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
-        }
-    </div>
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
-
+<h2 class="title-center center-row">Изменение ролей для пользователя @Model.UserEmail</h2>
+<div class="text-center">
+    <form class="center-block" asp-action="Edit" method="post">
+        <input type="hidden" name="userId" value="@Model.UserId" />
+        <div class="form-group ">
+            @foreach (IdentityRole role in Model.AllRoles)
+            {
+                <input type="checkbox" name="roles" value="@role.Name"
+                       @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />
+                <div class="control_indicator"></div>
+                @role.Name <br />
+            }
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>

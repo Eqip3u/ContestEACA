@@ -43,6 +43,9 @@
                     <li>
                         <a asp-action="GetContestUsers" asp-route-id="@Model.Id">Список участников</a>
                     </li>
+                    <li>
+                        <a asp-action="AssignmentModerators" asp-route-contestId="@Model.Id">Назначить модераторов</a>
+                    </li>
                     @if (!Model.MainContest)
                     {
                         <li>

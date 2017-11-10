@@ -7,15 +7,15 @@
     var user = await UserManager.GetUserAsync(User);
 
 }
-<br />
-<h2>Список всех номинации для конкурса: "@ViewBag.ContestName"</h2>
+
+<h2 class="title-center text-center">Список всех номинации для конкурса: "@ViewBag.ContestName"</h2>
 
 @if (user != null)
 {
     if (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
     {
     <p>
-        <a class="btn btn-info" asp-controller="Nominations" asp-route-HelperId="@ViewBag.ContestId" asp-action="Create">Создать новую номинацию</a>
+        <a class="btn btn-info" asp-controller="Nominations" asp-route-contestId="@ViewBag.ContestId" asp-action="Create">Создать новую номинацию</a>
     </p>
     }
 }
@@ -46,8 +46,8 @@
                     if (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
                     {
                         <td>
-                            <a asp-route-HelperId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
-                            <a asp-route-HelperId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                            <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                            <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
                         </td>
                     }
                 }
