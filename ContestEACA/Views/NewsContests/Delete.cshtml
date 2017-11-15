@@ -1,0 +1,52 @@
+﻿@model ContestEACA.Models.NewsContest
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<br />
+<br />
+<br />
+<br />
+
+<h2>Удалить</h2>
+
+<h3>Вы уверены что хотите удалить новость ?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Link)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Link)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+
+        <div hidden class="form-group">
+            <input id="contestId" name="contestId" value="@ViewBag.ContestId" />
+        </div>
+
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+    </form>
+</div>

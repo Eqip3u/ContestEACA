@@ -4,35 +4,19 @@
     ViewData["Title"] = "Удаление";
 }
 
-<h2>Удаление</h2>
+<h2 class="title-center text-center">Удаление</h2>
 
-<h3>Вы уверены что хотите удалить конкурс ?</h3>
-<div>
-    <h4>@Model.Name</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PreTitle)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PreText)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PreTitle)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PreTitle)
-        </dd>
-    </dl>
+
+        <h3 class=" text-center">Вы уверены что хотите удалить конкурс  @Model.Name ?</h3>
     
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Удалить" class="btn btn-danger" />
-    </form>
-</div>
+    <div class="input-group  ">
+        <form class="text-center" asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Удалить" class="btn btn-danger" />
+            <input type="button" onclick="history.back();" value="Вернуться" class="btn btn-primary" />
+        </form>
+
+
+      
+
+    </div>

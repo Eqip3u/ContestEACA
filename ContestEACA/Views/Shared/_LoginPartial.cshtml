@@ -12,13 +12,13 @@
             @if (user != null)
             {
                 <li>
-                    <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Добрый день @user.FirstName @user.LastName!</a>
+                    <a asp-area="" class="hidden-xs" asp-controller="Manage" asp-action="Index" title="Manage">Добрый день @user.FirstName @user.LastName!</a>
                 </li>
             }
             else
             {
                 <li>
-                    <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Добрый день @User.Identity.Name!</a>
+                    <a asp-area=""  class="hidden-xs" asp-controller="Manage" asp-action="Index" title="Manage">Добрый день @User.Identity.Name!</a>
                 </li>
             }
             <li>

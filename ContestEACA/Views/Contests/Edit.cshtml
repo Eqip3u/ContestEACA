@@ -4,14 +4,12 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Изменить свойства конкурса</h2>
-
-<h4>Конкурс</h4>
+<h2 class="title-center center-row">Изменить свойства конкурса</h2>
 
 <hr />
 
-<div class="row">
-    <div class="col-md-4">
+<div class=" row" style="align-items:center;">
+    <div class="col-md-4 editor ">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -23,6 +21,12 @@
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PreTitle" class="control-label"></label>
+                <input asp-for="PreTitle" class="form-control" />
+                <span asp-validation-for="PreTitle" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -43,17 +47,9 @@
                 <span asp-validation-for="Rewarding" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="PreTitle" class="control-label"></label>
-                <input asp-for="PreTitle" class="form-control" />
-                <span asp-validation-for="PreTitle" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="PreText" class="control-label"></label>
-                <input asp-for="PreText" class="form-control" />
-                <span asp-validation-for="PreText" class="text-danger"></span>
-            </div>
+
+            
 
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-danger" />
@@ -61,8 +57,22 @@
         </form>
 
         <hr />
+        </div>
 
-        <form asp-action="ChangeFile" enctype="multipart/form-data">
+    <div class="col-md-8">
+        <div class="editor ">
+            <p>
+                <label asp-for="PreText" class="control-label"></label>
+            </p>
+            <textarea class="form-control" style="min-width: 100%"
+             asp-for="PreText" rows="4" cols="50" placeholder="Напишите о конкурсе">
+            </textarea>
+            <span asp-validation-for="PreText" class="text-danger"></span>
+        </div>
+        
+        <div class="download">
+
+        <form class="editor col-md-5 input-download"  asp-action="ChangeFile" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Name" />
             <input type="hidden" asp-for="StartTime" />
@@ -72,25 +82,21 @@
             <input type="hidden" asp-for="PreText" />
             <input type="hidden" asp-for="ProvisionId" />
 
-            <div class="form-group">
-                <p>*Отдельная форма для изменения картинки конкурса</p>
-            </div>
+
 
             <div class="form-group">
-                <label class="control-label">Загрузить файл</label>
-                <input type="file" name="pic" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Поменять картинку" class="btn btn-default btn-danger" />
+                <label class="control-label"> Задний фон для конкурса</label>
+                <input type="file" name="pic"  title='Выбрать фон...'  hidden />
+                <hr />
+                <input type="submit" value="Поменять фон" class="btn btn-default btn-danger btn-block" />
             </div>
 
         </form>
 
-        <hr />
         
 
-        <form asp-action="ChangeProvision" enctype="multipart/form-data">
+
+        <form class="editor col-md-6 input-download" asp-action="ChangeProvision" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Name" />
             <input type="hidden" asp-for="StartTime" />
@@ -101,21 +107,21 @@
             <input type="hidden" asp-for="PreImageId" />
 
             <div class="form-group">
-                <p>*Отдельная форма для изменения положения о конкурсе</p>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Загрузить файл</label>
-                <input type="file" name="provision" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Поменять положение" class="btn btn-default btn-danger" />
+                <label class="control-label">Загрузить положение о конкурсе</label>
+                <input type="file" name="provision"  title='Выбрать положение...' />
+                
+                <hr />
+                <input type="submit" value="Поменять положение" class="btn btn-default btn-danger btn-block" />
             </div>
 
         </form>
+</div>
+        
 
-        <hr />
     </div>
+    <div class="col-md-12 text-center ">
+                    <a  onclick="history.back();" value="Вернуться" >Вернуться назад</a>
+
+</div>
 </div>
 

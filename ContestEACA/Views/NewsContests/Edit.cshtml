@@ -1,0 +1,66 @@
+﻿@model ContestEACA.Models.NewsContest
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<br />
+<br />
+<br />
+<br />
+
+<h2>Изменить новость</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link" class="control-label"></label>
+                <input asp-for="Link" class="form-control" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+
+            <div hidden class="form-group">
+                <input id="ContestId" name="ContestId" value="@ViewBag.ContestId" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-danger" />
+            </div>
+        </form>
+
+        <hr />
+
+        <form asp-action="ChangePhoto" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <p>*Отдельная форма для изменения картинки конкурса</p>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Загрузить файл</label>
+                <input type="file" name="pic" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Поменять картинку" class="btn btn-default btn-danger" />
+            </div>
+
+        </form>
+    </div>
+</div>
+

@@ -14,7 +14,7 @@ namespace ContestEACA.Models
         Denied,
 
         [Display(Name = "В ожиданий модерации")]
-        AwaitingForModeration
+        AwaitingForModeration,
     }
 
     public class Post

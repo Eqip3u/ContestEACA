@@ -1,18 +1,16 @@
 ﻿@model IEnumerable<ContestEACA.Models.Contest>
 
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Панель администратора";
 }
-<br />
-<br />
-<br />
-<h2>Список всех активных конкурсов</h2>
 
-<hr />
+<h2 class="title-center">Список всех активных конкурсов  <a  asp-controller="Contests" class="small" asp-action="Create"> Cоздать новый конкурс</a></h2>
 
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
+
+<table class="table table-responsive table-striped table-bordered">
+    <thead class="thead-inverse">
+        <tr class="menu">
             <th>
                 Название конкурса
             </th>
@@ -27,29 +25,72 @@
             int countAwaitingModeration = item.Posts.Where(x => x.Status == StatusPost.AwaitingForModeration).Count();
 
             <tr>
+
                 <td class="col-md-3">
-                    @item.Name
-                </td>
+                    <div class="text-center">
+                        <a  asp-controller="Contests" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>
+                    </div>
+
+               </td>
+
+
                 <td class="col-md-9">
-                    <a asp-controller="Contests" asp-action="Details" asp-route-id="@item.Id">Страница конкурса</a> |
-                    <a asp-controller="Contests" asp-action="Edit" asp-route-id="@item.Id">Изменить страницу конкурса</a>
-                    <br />
-                    <br />
-                    <a asp-action="Index" asp-route-contestId="@item.Id">
-                        Список работ
-                    </a>
-                    @if (countAwaitingModeration > 0)
-                    {
-                        <small>(Требующих модерации: <span class="badge">@countAwaitingModeration</span>)</small>
-                    }
-                    <br />
-                    <br />
-                    <a asp-controller="Contests" asp-action="AssignmentModerators" asp-route-contestId="@item.Id">Назначить модераторов</a> |
-                    <a asp-controller="Report" asp-action="Index" asp-route-contest="@item.Id">Создать отчёт</a> |
-                    <a asp-controller="Contests" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
-                </td>
+                    <div class="col-md-5">
+                        <a asp-controller="Contests" asp-action="Edit" asp-route-id="@item.Id">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Изменить страницу конкурса
+                        </a>
+
+
+                        @if (!item.MainContest)
+                        {
+
+
+                            <p style="margin: 0px;">
+                                <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@item.Id">
+                                    <i class="fa fa-star-o" aria-hidden="true"></i> Сменить статус конкурса на "Главный"
+                                </a>
+                            </p>
+                        }
+                        else
+                        {
+                            <p style="margin: 0px;">
+                                <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@item.Id">
+                                    <i class="fa fa-star" aria-hidden="true"></i>Убрать статус "Главный" с этого конкурса
+                                </a>
+                            </p>
+                        }
+
+                        @if (countAwaitingModeration > 0)
+                        {
+                            <p style="margin: 0px;">
+                                <a asp-action="Index" asp-route-contestId="@item.Id">
+                                    <i class="fa fa-th-list" aria-hidden="true"></i> Работы требующие модерации: <span class="badge"> @countAwaitingModeration</span>
+                                </a>
+                            </p>
+                        }
+                        else
+                        {
+                            <p style="margin: 0px;     color: #337ab7;">
+                                <a asp-action="Index" asp-route-contestId="@item.Id">
+                                    <i class="fa fa-th-list" aria-hidden="true"></i> Список всех работ
+                                </a>
+                            </p>
+                        }
+</div>
+                    <div class="col-md-5">
+                        <a asp-controller="Contests" asp-action="News" asp-route-contestId="@item.Id"> <i class="fa fa-list-ul" aria-hidden="true"></i> Список новостей</a>  &#8194;
+                        <a asp-controller="NewsContests" asp-action="Create" asp-route-contestId="@item.Id"> <i class="fa fa-plus" aria-hidden="true"></i>  Добавить новость</a> 	
+                        <p style="margin: 0px;">
+                            <a asp-controller="Contests" asp-action="AssignmentModerators" asp-route-contestId="@item.Id"> <i class="fa fa-user" aria-hidden="true"></i> Назначить модераторов</a>
+                        </p>
+                       
+                            <a asp-controller="Report" asp-action="Index" asp-route-contest="@item.Id"> <i class="fa fa-file-text-o" aria-hidden="true"></i> Создать отчёт</a> 	&#8194;
+               
+
+                            <a asp-controller="Contests" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa fa-trash" aria-hidden="true"></i> Удалить</a>
+</div>
+</td>
             </tr>
         }
     </tbody>
 </table>
-

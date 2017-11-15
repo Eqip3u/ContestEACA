@@ -2,40 +2,42 @@
 @{
     ViewData["Title"] = "Регистрация";
 }
+<div class="jumbotron vertical-center">
+    <div class="container">
+        <h2 class="title-center text-center ">Свяжите свой аккаунт @ViewData["LoginProvider"].</h2>
 
-<h2>@ViewData["Title"]</h2>
-<h4>Свяжите свой аккаунт @ViewData["LoginProvider"].</h4>
-<hr />
 
-<p class="text-info">
-    Вы успешно прошли аутентификацию с помощью <strong>@ViewData["LoginProvider"]</strong>.
-    Введите адрес электронной почты и укажите правильное имя и фамилию для этого сайта ниже и нажмите кнопку «Регистрация», чтобы завершить вход в систему.
-</p>
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default">Регистрация</button>
-        </form>
+        <p class="col-md-12 ">
+            <h4>
+                Вы успешно прошли аутентификацию с помощью <strong>@ViewData["LoginProvider"]</strong>.
+                Введите адрес электронной почты и укажите правильное имя и фамилию для этого сайта ниже и нажмите кнопку «Регистрация»,
+                чтобы завершить вход в систему.
+            </h4> 
+        </p>
+        
+        <div class="col-md-4">
+            <form asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Регистрация</button>
+            </form>
+        </div>
     </div>
 </div>
-
-@section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-}
+    @section Scripts {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+    }

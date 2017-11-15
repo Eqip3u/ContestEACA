@@ -6,7 +6,6 @@
 
 <div class=" col-md-5 col-xs-11  post_box">
 
-
     <div class="post_img">
         @if (Model.Cover != null)
         {
@@ -18,15 +17,17 @@
         }
         else
         {
+            Random rnd = new Random();
+            var image = rnd.Next(1, 4);
+            string noiamge = $"noimage{image}.png";
+
             <div class="img-wrapper">
                 <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.ID">
-                    <img class="img_post" src="~/Inga/noimage.png" />
+                    <img class="img_post" src="~/Inga/@noiamge"/>
                 </a>
             </div>
         }
     </div>
-
-
 
     <div class=" post_info">
         <h3><a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.ID"> @Model.Title  </a> </h3>
@@ -39,19 +40,22 @@
 
         @if (User.Identity.IsAuthenticated)
         {
-
-            <a id="likeAjax_@Model.ID" class="btn btn-info btn-lg like"><span class="glyphicon glyphicon-heart"></span> Нравится  </a>
-
+            <a id="likeAjax_@Model.ID" class="btn btn-info btn-lg like"><span id="likeSpan_@Model.ID" class="fa fa-heart-o" aria-hidden="true"></span> Нравится  </a>
         }
 
     </div>
 
-
-
 </div>
 
-
 <script>
+    $.ajax({
+        url: '/Posts/CheckLike/@Model.ID',
+        dataType: "html",
+        error: function (response) {
+            $('#likeSpan_@Model.ID').removeClass('fa fa-heart-o').addClass('fa fa-heart');
+        }
+    });
+
     $(document).ready(function () {
         $('#likeAjax_@Model.ID').click(function () {
             $.ajax({
@@ -59,6 +63,7 @@
                 dataType: "html",
                 success: function (data) {
                     $('#rating_@Model.ID').html('@conRating');
+                    $('#likeSpan_@Model.ID').removeClass('fa fa-heart-o').addClass('fa fa-heart');
                 },
                 error: function (response) {
                     alert("Вы уже оценивали эту работу");

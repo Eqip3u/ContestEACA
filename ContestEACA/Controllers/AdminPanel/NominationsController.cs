@@ -21,14 +21,11 @@ namespace ContestEACA.Controllers
             _context = context;
         }
 
-        // GET: Nominations
-        public async Task<IActionResult> Index()
-        {
-            var applicationContext = _context.Nominations.Include(n => n.Contest);
-            return View(await applicationContext.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View();
+        //}
 
-        // GET: Nominations/Details/5
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
@@ -49,7 +46,6 @@ namespace ContestEACA.Controllers
             return View(nomination);
         }
 
-        // GET: Nominations/Create
         public IActionResult Create(int? contestId)
         {
             if (contestId != null)
@@ -62,9 +58,7 @@ namespace ContestEACA.Controllers
             return View();
         }
 
-        // POST: Nominations/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? contestId, [Bind("Id,Name,Description,ContestId")] Nomination nomination)
@@ -79,7 +73,6 @@ namespace ContestEACA.Controllers
             return RedirectToAction("Nominations", "Contests", new { id = contestId });
         }
 
-        // GET: Nominations/Edit/5
         public async Task<IActionResult> Edit(int? contestId, int? id)
         {
             if (id == null)
@@ -97,9 +90,6 @@ namespace ContestEACA.Controllers
             return View(nomination);
         }
 
-        // POST: Nominations/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? contestId, int id, [Bind("Id,Name,Description,ContestId")] Nomination nomination)
@@ -136,7 +126,7 @@ namespace ContestEACA.Controllers
             return View(nomination);
         }
 
-        // GET: Nominations/Delete/5
+
         public async Task<IActionResult> Delete(int? contestId, int? id)
         {
             if (id == null)
@@ -157,7 +147,6 @@ namespace ContestEACA.Controllers
             return View(nomination);
         }
 
-        // POST: Nominations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? contestId, int id)

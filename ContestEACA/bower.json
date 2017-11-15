@@ -11,7 +11,7 @@
     "bootstrap-social": "^5.1.1",
     "components-font-awesome": "^4.7.0",
     "normalize-css": "^7.0.0",
-    "tableexport.js": "v5.0.0-rc.11"
+    "font-awesome-animation": "v0.1.0"
   },
   "resolutions": {
     "jquery": ">=1.9.1"

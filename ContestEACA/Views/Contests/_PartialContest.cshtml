@@ -23,6 +23,15 @@
     {
         ViewData["CountNominations"] = 0;
     }
+
+    if (Model.News != null)
+    {
+        ViewData["CountNews"] = Model.News.Count();
+    }
+    else
+    {
+        ViewData["CountNews"] = 0;
+    }
 }
 
 <div   class="container contest">
@@ -38,29 +47,29 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li>
-                        <a asp-action="Edit" asp-route-id="@Model.Id">Изменить </a>
+                        <a asp-action="Edit" asp-route-id="@Model.Id"> <span class="glyphicon glyphicon-edit"></span> Изменить</a>
                     </li>
                     <li>
-                        <a asp-action="GetContestUsers" asp-route-id="@Model.Id">Список участников</a>
+                        <a asp-action="GetContestUsers" asp-route-id="@Model.Id"> <span class="fa fa-users"></span> Список участников</a>
                     </li>
                     <li>
-                        <a asp-action="AssignmentModerators" asp-route-contestId="@Model.Id">Назначить модераторов</a>
+                        <a asp-action="AssignmentModerators" asp-route-contestId="@Model.Id"> <span class="fa fa-user"></span> Назначить модераторов</a>
                     </li>
                     @if (!Model.MainContest)
                     {
                         <li>
-                            <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@Model.Id">Сменить статус конкурса на "Главный"</a>
+                            <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@Model.Id"> <span class="glyphicon glyphicon-star"></span> Сменить статус конкурса на "Главный"</a>
                         </li>
                     }
                     else
                     {
                         <li>
-                            <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@Model.Id">Убрать флаг "Главный" с этого конкурса</a>
+                            <a asp-controller="Contests" asp-action="SetMainContest" asp-route-id="@Model.Id"> <span class="glyphicon glyphicon-star-empty"> </span> Убрать флаг "Главный" с этого конкурса</a>
                         </li>
                     }
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a asp-action="Delete" asp-route-id="@Model.Id">Удалить конкурс </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id"><span class="glyphicon glyphicon-trash"> </span> Удалить конкурс </a>
                     </li>
                 </ul>
             </div>
@@ -68,32 +77,36 @@
     }
 
 
-    <h1 class="text-center"> @Html.DisplayFor(modelItem => Model.Name)</h1>
-    <h3 class="text-center"> @Html.DisplayFor(modelItem => Model.PreTitle)</h3>
+    <a  asp-action="Details" asp-route-id="@Model.Id">
+        <h1 class="text-center"> @Html.DisplayFor(modelItem => Model.Name)</h1>
+    </a>
+        <h3 class="text-center"> @Html.DisplayFor(modelItem => Model.PreTitle)</h3>
 
 
 
-    <p class="text-center">
-        @Html.DisplayFor(modelItem => Model.PreText)
-    </p>
+        <p class="text-left">
+            @Html.DisplayFor(modelItem => Model.PreText)
+        </p>
 
-    <hr />
+        <hr />
 
-    <p class="text-right"> Начало: @Html.DisplayFor(modelItem => Model.StartTime)  / Конец: @Html.DisplayFor(modelItem => Model.EndTime) </p>
-    <p class="text-right"> Награждение: @Html.DisplayFor(modelItem => Model.Rewarding)</p>
+        <p class="text-right"> Начало: @Html.DisplayFor(modelItem => Model.StartTime)  / Конец: @Html.DisplayFor(modelItem => Model.EndTime) </p>
+        <p class="text-right"> Награждение: @Html.DisplayFor(modelItem => Model.Rewarding)</p>
 
-    <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav">
 
-        <li>
-            <a class="btn btn-default" asp-action="Posts" asp-route-id="@Model.Id">Работы участников <span class="badge">@ViewBag.CountWorks</span></a>
-        </li>
+            <li>
+                <a class="btn btn-default" asp-action="Posts" asp-route-id="@Model.Id">Работы участников <span class="badge">@ViewBag.CountWorks</span></a>
+            </li>
+            <li>
+                <a class="btn btn-default" asp-action="Nominations" asp-route-id="@Model.Id">Номинации конкурса <span class="badge">@ViewBag.CountNominations</span> </a>
+            </li>
+            <li>
+                <a class="btn btn-default" asp-action="News" asp-route-contestId="@Model.Id">Новости конкурса <span class="badge">@ViewBag.CountNews</span> </a>
+            </li>
+            <li>
+                <a class="btn btn-default" asp-action="Details" asp-route-id="@Model.Id">Подробнее </a>
+            </li>
 
-        <li>
-            <a class="btn btn-default" asp-action="Nominations" asp-route-id="@Model.Id">Номинации конкурса <span class="badge">@ViewBag.CountNominations</span> </a>
-        </li>
-        <li>
-            <a class="btn btn-default" asp-action="Details" asp-route-id="@Model.Id">Подробнее </a>
-        </li>
-
-    </ul>
+        </ul>
 </div>

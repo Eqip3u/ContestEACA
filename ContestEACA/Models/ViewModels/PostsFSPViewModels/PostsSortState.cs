@@ -10,6 +10,7 @@ namespace ContestEACA.Models.ViewModels.PostsFSPViewModels
         RatingAsc,
         RatingDesc,
         NameAsc,
-        NameDesc
+        NameDesc,
+        Moderation
     }
 }

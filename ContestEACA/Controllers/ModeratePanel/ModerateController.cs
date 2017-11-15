@@ -12,9 +12,11 @@ using ContestEACA.Models.ManageViewModels;
 using ContestEACA.Models.ViewModels;
 using ContestEACA.Models.EnumHelpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContestEACA.Controllers.ModeratePanel
 {
+    [Authorize(Roles = "admin, moderator")]
     public class ModerateController : Controller
     {
         private readonly ApplicationContext _context;

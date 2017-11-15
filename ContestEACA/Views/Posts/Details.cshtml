@@ -1,4 +1,5 @@
-﻿@model ContestEACA.Models.Post;
+﻿@model ContestEACA.Models.Post
+
 @{
     ViewData["Title"] = "Details";
 
@@ -19,7 +20,7 @@
 
 
 
-<h2 class="text-center title-center hidden-xs" >Работа на конкурс</h2>
+<h2 class="text-center title-center hidden-xs">Работа на конкурс</h2>
 
 
 
@@ -48,11 +49,6 @@
             <iframe class="embed-responsive-item image_post" src="//www.youtube.com/embed/@ViewBag.ParsURL" allowfullscreen=""></iframe>
         </div>
     }
-    else
-    {
-
-    }
-
 
 
     @if (ViewBag.FileEnable)
@@ -61,13 +57,6 @@
             <img src="@Url.Content(ViewBag.FilePath)" class="img-responsive col-md-12 nopadding image_post" style=" align-items:center;" alt="конкурсная работа">
             <p style="visibility:hidden;">@fileExtension</p>
         </a>
-
-
-
-    }
-    else
-    {
-
     }
 
 
@@ -75,16 +64,19 @@
 
     <h4> Рейтинг: @Html.DisplayFor(model => model.Rating) <a href="#">Нравится</a> </h4>
 
+    <div id="disqus_thread"></div>
+
+</div>
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
                 document.write(VK.Share.button
                     ({
                         url: 'http://contesteaca.azurewebsites.net/Posts/Details/ @Model.ID',
                         title: ' @Model.Title  Автор:  @Model.Author.FirstName @Model.Author.LastName  ',
                         text: ' Автор:  @Model.Author.FirstName @Model.Author.LastName  ',
-                        @*image: ' http://contesteaca.azurewebsites.net/ @Model.Cover.Path'*@ 
+                        @*image: ' http://contesteaca.azurewebsites.net/ @Model.Cover.Path'*@
 
                     },
                     {
@@ -92,9 +84,16 @@
                         text: "Поделиться"
                     }
                     ));
-    </script>
+</script>
 
-
-
+<script>
+    (function () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://contesteaca.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 

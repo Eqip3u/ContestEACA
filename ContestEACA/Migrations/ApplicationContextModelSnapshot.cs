@@ -171,6 +171,32 @@ namespace ContestEACA.Migrations
                     b.ToTable("ModerateUsersContests");
                 });
 
+            modelBuilder.Entity("ContestEACA.Models.NewsContest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContestId");
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<string>("Link");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("PhotoId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("PhotoId");
+
+                    b.ToTable("News");
+                });
+
             modelBuilder.Entity("ContestEACA.Models.Nomination", b =>
                 {
                     b.Property<int>("Id")
@@ -378,6 +404,18 @@ namespace ContestEACA.Migrations
                     b.HasOne("ContestEACA.Models.ApplicationUser", "User")
                         .WithMany("ContestModerate")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("ContestEACA.Models.NewsContest", b =>
+                {
+                    b.HasOne("ContestEACA.Models.Contest", "Contest")
+                        .WithMany("News")
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ContestEACA.Models.FileModel", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId");
                 });
 
             modelBuilder.Entity("ContestEACA.Models.Nomination", b =>

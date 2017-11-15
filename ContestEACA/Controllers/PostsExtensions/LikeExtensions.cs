@@ -20,7 +20,6 @@ namespace ContestEACA.Controllers
                     return StatusCode(400);
 
             post.Rating++;
-
             _context.Update(post);
 
             var like = new Like()
@@ -30,10 +29,22 @@ namespace ContestEACA.Controllers
             };
 
             _context.Likes.Add(like);
-
             _context.SaveChanges();
 
             return Json(post.Rating);
+        }
+
+        [Authorize]
+        public IActionResult CheckLike(int? id)
+        {
+            var post = _context.Posts.Include(x => x.Likes).SingleOrDefault(x => x.ID == id);
+            var user = _context.Users.SingleOrDefault(x => x.Email == User.Identity.Name);
+
+            foreach (var item in post.Likes)
+                if (item.UserId == user.Id)
+                    return StatusCode(400);
+
+            return StatusCode(200);
         }
     }
 }

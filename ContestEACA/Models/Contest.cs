@@ -78,6 +78,9 @@ namespace ContestEACA.Models
         public virtual ICollection<ModerateUserContest> Moderators { get; set; }
 
 
+        [Display(Name = "Новости")]
+        public virtual ICollection<NewsContest> News { get; set; }
+
 
         [Display(Name = "Работы")]
         public virtual ICollection<Post> Posts { get; set; }

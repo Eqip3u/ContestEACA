@@ -41,7 +41,11 @@
                        asp-action="NominationsContest"
                        asp-route-contestId="@item.Id">
                         Просмотр и редактирование всех номинации конкурса
-                    </a> 
+                    </a>
+                    <br />
+                    <br />
+                    <a asp-controller="Contests" asp-action="News" asp-route-contestId="@item.Id">Список новостей</a> |
+                    <a asp-controller="NewsContests" asp-action="Create" asp-route-contestId="@item.Id">Добавить новость</a>
                     <br />
                     <br />
                     <a asp-controller="Moderate" asp-action="GetAllWorksContest" asp-route-contestId="@item.Id">Все работы</a> |

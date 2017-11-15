@@ -14,7 +14,7 @@ using ContestEACA.Models.EnumHelpers;
 
 namespace ContestEACA.Controllers
 {
-    [Authorize(Roles = "user, admin")]
+    [Authorize(Roles = "user, moderator, admin")]
     public class MemberPanelController : Controller
     {
         private readonly ApplicationContext _context;
@@ -89,7 +89,7 @@ namespace ContestEACA.Controllers
                 HelpNamePost = items.FirstOrDefault()
             };
 
-            ViewBag.CountWork = posts.Count();
+            ViewBag.CountWork = _context.Users.Include(x => x.Posts).FirstOrDefault(x => x.Id == user.Id).Posts.Count();
 
             return View(viewModel);
             

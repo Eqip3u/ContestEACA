@@ -1,0 +1,49 @@
+﻿@model ContestEACA.Models.NewsContest
+
+@{
+    ViewData["Title"] = "Create";
+}
+<br />
+<br />
+<br />
+<br />
+<h2>Создать новость для конкурса: "@ViewBag.ContestName"</h2>
+
+<h4>Новая новость</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link" class="control-label"></label>
+                <input asp-for="Link" class="form-control" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Загрузить картинку</label>
+                <input type="file" title="Выбрать файл" name="uploadPhoto" class="btn" /><br>
+            </div>
+
+            <div hidden class="form-group">
+                <input id="ContestId" name="ContestId" value="@ViewBag.ContestId" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+

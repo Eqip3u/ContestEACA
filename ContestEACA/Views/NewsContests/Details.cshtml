@@ -1,0 +1,56 @@
+﻿@model ContestEACA.Models.NewsContest
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<script id="dsq-count-scr" src="//san2blog.disqus.com/count.js" async></script>
+
+<br />
+<br />
+<br />
+<br />
+<h2>Новость @Model.Name</h2>
+
+<div>
+    <h4>Новость</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Link)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Link)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.Name)
+        </dd>
+    </dl>
+</div>
+
+<div id="disqus_thread"></div>
+
+<script>
+    (function () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://contesteaca.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>

@@ -75,7 +75,7 @@ namespace ContestEACA.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,TextWork,LinkWork,Rating,NominationId,ContestId")] Post post, IFormFile uploadedFile, IFormFile uploadedCover)
+        public async Task<IActionResult> Create(Post post, IFormFile uploadedFile, IFormFile uploadedCover)
         {
             if (await EmailConfirmed())
             {
@@ -101,8 +101,6 @@ namespace ContestEACA.Controllers
             }
             return View(post);
         }
-
-
 
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)

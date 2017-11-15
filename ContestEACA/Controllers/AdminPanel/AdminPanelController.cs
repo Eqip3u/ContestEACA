@@ -38,7 +38,7 @@ namespace ContestEACA.Controllers
             int? contestId,
             int? nominationId,
             int page = 1,
-            PostsSortState sortOrder = PostsSortState.RatingDesc)
+            PostsSortState sortOrder = PostsSortState.RatingAsc)
         {
 
             int pageSize = 10;

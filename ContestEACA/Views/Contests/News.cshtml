@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ContestEACA.Models.NewsContest>
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Новости";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<h2 class="title-center text-center" >Новости конкурса:<br /> @ViewBag.ContestName</h2>
+<br />
+
+@foreach (var item in Model)
+{
+    <div class="col-md-12 news">
+        <div class="news-image">
+            <a class=" center-row"
+                asp-controller="NewsContests"
+                asp-action="Details"
+                asp-route-id="@item.Id"
+                asp-route-contestId="@item.ContestId">
+                <h1 class="news-text">  @Html.DisplayFor(modelItem => item.Name) </h1>
+            </a>
+        </div>
+        <br />
+                
+        @Html.DisplayFor(modelItem => item.Text)
+
+        <a href="@Html.DisplayFor(modelItem => item.Link)"><i class="fa fa-link" aria-hidden="true"></i> </a>  
+                
+        @if (item.Photo != null)
+        {
+            <img class="center-block img-responsive" src="@Url.Content(item.Photo.Path)" /> 
+        }
+        else
+        {
+                
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (user != null)
+            {
+                if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result ||
+                    ViewBag.AccessModerator)
+                {
+
+                    <a asp-controller="NewsContests"
+                        asp-action="Edit"
+                        asp-route-id="@item.Id"
+                        asp-route-contestId="@item.ContestId">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+
+                    <a asp-controller="NewsContests"
+                        asp-action="Delete"
+                        asp-route-id="@item.Id"
+                        asp-route-contestId="@item.ContestId">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+
+                }
+            }
+        }
+    </div>
+}
+    
+
+

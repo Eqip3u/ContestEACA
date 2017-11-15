@@ -12,23 +12,26 @@
 
 <div id="fullpage">
 
-    <section id="info" data-anchor="info" class="section">
+    <section id="info" data-anchor="info" class="section fp-auto-height-responsive">
         <div class="container center-block">
 
-            <h2 class="text-center">Конкурсы</h2>
+            <h2 class="text-center title-center">Конкурсы</h2>
 
             @if(user != null)
             {
                 @if(await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
                 {
-                    <p class="text-center">
-                        <a class="btn btn-danger" asp-action="Create">Создать новый конкурс</a> 
+                    <p class="text-center ">
+                        <a class="btn btn-success" asp-action="Create"> <i class="fa fa-plus" aria-hidden="true"></i> Создать новый конкурс</a> 
                     </p>
                 }           
             }
+
             <div  class="down">
-              <i id="moveDown"class="fa fa-angle-down fa-5x" ></i></div>
-             </div>
+              <i id="moveDown"class="fa fa-angle-down fa-5x   faa-falling animated" ></i>
+            </div>
+
+        </div>
     </section>
 
     @foreach (var item in Model.Where(x => x.Status == StatusContest.Active || x.Status == StatusContest.Coming).OrderBy(x => x.EndTime))
@@ -42,9 +45,13 @@
             image = "0";
         }
 
-        <section style="background-image:@image;"
+        <section style="background-image:@image;
+                        -moz-background-size: 100%; /* Firefox 3.6+ */
+                        -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+                        -o-background-size: 100%; /* Opera 9.6+ */
+                        background-size: 100%;"
                  data-anchor="section_@FPSec"
-                 class="section background"
+                 class="section background fp-auto-height-responsive noshadow"
                  id="section">
 
                 @await Html.PartialAsync("_PartialContest", item)
@@ -56,17 +63,34 @@
 
     }
 
-    <section id="archiveContests" data-anchor="archiveContests" class="section">
-        <div class="container center-block">
-
+    <section id="archiveContests" data-anchor="section_archive" class="section fp-auto-height-responsive" >
             <h2 class="text-center">
-                <a class="btn btn-danger" asp-action="ArchiveContests">Архив конкурсов</a>
+                <a  class=" faa-pulse " asp-action="ArchiveContests">
+                    <i class="fa fa-archive fa-3x " aria-hidden="true"></i>
+                    <br>
+                        Архив конкурсов
+                </a>
             </h2>
-
-        </div>
     </section>
 
 </div>
+
+    <ul id="my-nav">
+
+    <li>
+        <i class="fa fa-circle  fa-hover-hidden faa-float animated-hover"></i> 
+        <i class="fa fa-arrow-up fa-hover-show faa-float animated-hover"></i>       
+   </li>
+
+@foreach (var item in Model.Where(x => x.Status == StatusContest.Active || x.Status == StatusContest.Coming).OrderBy(x => x.EndTime))
+{
+    <li> <i class="fa fa-circle-o faa-pulse animated-hover" aria-hidden="true"></i> </li>
+}
+    <li>  <i class="fa fa-archive " aria-hidden="true"></i> </li> 
+
+    </ul>
+
+
 
 <script>
 

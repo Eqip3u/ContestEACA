@@ -37,8 +37,13 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td class="col-md-2">
-                    <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
-                    <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                    <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Edit" asp-route-id="@item.Id">
+                        <span class="glyphicon glyphicon-pencil"> </span> 
+                    </a> 
+                    |
+                    <a asp-route-contestId="@ViewBag.ContestId" asp-controller="Nominations" asp-action="Delete" asp-route-id="@item.Id">
+                        <span class="glyphicon glyphicon-trash"> </span> 
+                    </a>
                 </td>
             </tr>
         }
